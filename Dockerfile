@@ -1,28 +1,27 @@
 # Build stage
 FROM node:20-alpine AS builder
 
-# Set working directory
-WORKDIR /app
-
-# Copy package files first
-COPY package.json yarn.lock ./
-COPY lib/package.json lib/yarn.lock ./lib/
-
-# Copy all source files (including lib)
-COPY . .
-
-# Install dependencies for lib first
+# Install dependencies for lib first (better caching)
 WORKDIR /app/lib
-RUN yarn install --frozen-lockfile
+COPY lib/package.json lib/yarn.lock ./
+RUN yarn install --frozen-lockfile --network-timeout 100000
 
-# Build lib (creates lib/dist)
+# Install root dependencies (better caching)
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --network-timeout 100000
+
+# Copy lib source and build
+WORKDIR /app/lib
+COPY lib/src ./src
+COPY lib/tsconfig.json ./
 RUN yarn build
 
-# Install root dependencies (will link to built lib via link:./lib)
+# Copy app source and build (lib/dist already exists from previous build)
 WORKDIR /app
-RUN yarn install --frozen-lockfile
-
-# Build the application (includes all profile management UI and API calls)
+COPY src ./src
+COPY public ./public
+COPY index.html vite.config.ts tsconfig.json postcss.config.js tailwind.config.js eslint.config.mjs prettier.config.mjs ./
 RUN yarn build
 
 # Production stage
@@ -31,62 +30,38 @@ FROM nginx:alpine
 # Copy built files from builder
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# Create entrypoint script to generate env-config.js at runtime
-RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
-    echo 'set -e' >> /docker-entrypoint.sh && \
-    echo '' >> /docker-entrypoint.sh && \
-    echo '# Create env-config.js with environment variables from Docker' >> /docker-entrypoint.sh && \
-    echo 'cat > /usr/share/nginx/html/env-config.js <<EOF' >> /docker-entrypoint.sh && \
-    echo 'window.__ENV__ = {' >> /docker-entrypoint.sh && \
-    echo '  ZITADEL_INSTANCE_URL: "${ZITADEL_INSTANCE_URL:-}",' >> /docker-entrypoint.sh && \
-    echo '  ZITADEL_CLIENT_ID: "${ZITADEL_CLIENT_ID:-}",' >> /docker-entrypoint.sh && \
-    echo '  ZITADEL_REDIRECT_URI: "${ZITADEL_REDIRECT_URI:-}",' >> /docker-entrypoint.sh && \
-    echo '  ZITADEL_SILENT_REDIRECT_URI: "${ZITADEL_SILENT_REDIRECT_URI:-}",' >> /docker-entrypoint.sh && \
-    echo '  ZITADEL_POST_LOGOUT_REDIRECT_URI: "${ZITADEL_POST_LOGOUT_REDIRECT_URI:-}",' >> /docker-entrypoint.sh && \
-    echo '  ZITADEL_AUTH_AUDIENCE: "${ZITADEL_AUTH_AUDIENCE:-}",' >> /docker-entrypoint.sh && \
-    echo '  API_BASE_URL: "${API_BASE_URL:-}",' >> /docker-entrypoint.sh && \
-    echo '  AUTH_AUTHORITY: "${AUTH_AUTHORITY:-}",' >> /docker-entrypoint.sh && \
-    echo '  AUTH_CLIENT_ID: "${AUTH_CLIENT_ID:-}",' >> /docker-entrypoint.sh && \
-    echo '  AUTH_REDIRECT_URI: "${AUTH_REDIRECT_URI:-}",' >> /docker-entrypoint.sh && \
-    echo '  AUTH_SILENT_REDIRECT_URI: "${AUTH_SILENT_REDIRECT_URI:-}",' >> /docker-entrypoint.sh && \
-    echo '  AUTH_SUPPORTED_SCOPES: "${AUTH_SUPPORTED_SCOPES:-}",' >> /docker-entrypoint.sh && \
-    echo '  AUTH_AUDIENCE: "${AUTH_AUDIENCE:-}"' >> /docker-entrypoint.sh && \
-    echo '};' >> /docker-entrypoint.sh && \
-    echo 'EOF' >> /docker-entrypoint.sh && \
-    echo '' >> /docker-entrypoint.sh && \
-    echo '# Inject script tag into index.html if not already present' >> /docker-entrypoint.sh && \
-    echo 'INDEX_FILE="/usr/share/nginx/html/index.html"' >> /docker-entrypoint.sh && \
-    echo 'if [ -f "$INDEX_FILE" ] && ! grep -q "env-config.js" "$INDEX_FILE"; then' >> /docker-entrypoint.sh && \
-    echo '  sed -i "s|<body>|<body>\\n    <script src=\"/env-config.js\"></script>|" "$INDEX_FILE"' >> /docker-entrypoint.sh && \
-    echo 'fi' >> /docker-entrypoint.sh && \
-    echo '' >> /docker-entrypoint.sh && \
-    echo '# Start nginx' >> /docker-entrypoint.sh && \
-    echo 'exec "$@"' >> /docker-entrypoint.sh && \
-    chmod +x /docker-entrypoint.sh
-
-# Configure nginx for SPA routing
-RUN echo 'server { \
-    listen 80; \
-    server_name _; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    \
-    location / { \
-        try_files $uri $uri/ /index.html; \
-    } \
-    \
-    location /env-config.js { \
-        add_header Cache-Control "no-cache, no-store, must-revalidate"; \
-        add_header Pragma "no-cache"; \
-        add_header Expires "0"; \
-    } \
-    \
-    location /health { \
-        access_log off; \
-        return 200 "healthy\n"; \
-        add_header Content-Type text/plain; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# Create entrypoint script and nginx config in one layer
+RUN printf '#!/bin/sh\n\
+set -e\n\
+cat > /usr/share/nginx/html/env-config.js <<EOF\n\
+window.__ENV__ = {\n\
+  ZITADEL_INSTANCE_URL: "${ZITADEL_INSTANCE_URL:-}",\n\
+  ZITADEL_CLIENT_ID: "${ZITADEL_CLIENT_ID:-}",\n\
+  ZITADEL_REDIRECT_URI: "${ZITADEL_REDIRECT_URI:-}",\n\
+  ZITADEL_SILENT_REDIRECT_URI: "${ZITADEL_SILENT_REDIRECT_URI:-}",\n\
+  ZITADEL_POST_LOGOUT_REDIRECT_URI: "${ZITADEL_POST_LOGOUT_REDIRECT_URI:-}",\n\
+  ZITADEL_AUTH_AUDIENCE: "${ZITADEL_AUTH_AUDIENCE:-}",\n\
+  API_BASE_URL: "${API_BASE_URL:-}",\n\
+  AUTH_AUTHORITY: "${AUTH_AUTHORITY:-}",\n\
+  AUTH_CLIENT_ID: "${AUTH_CLIENT_ID:-}",\n\
+  AUTH_REDIRECT_URI: "${AUTH_REDIRECT_URI:-}",\n\
+  AUTH_SILENT_REDIRECT_URI: "${AUTH_SILENT_REDIRECT_URI:-}",\n\
+  AUTH_SUPPORTED_SCOPES: "${AUTH_SUPPORTED_SCOPES:-}",\n\
+  AUTH_AUDIENCE: "${AUTH_AUDIENCE:-}"\n\
+};\n\
+EOF\n\
+INDEX_FILE="/usr/share/nginx/html/index.html"\n\
+[ -f "$INDEX_FILE" ] && ! grep -q "env-config.js" "$INDEX_FILE" && sed -i '"'"'s|<body>|<body>\\n    <script src="/env-config.js"></script>|'"'"' "$INDEX_FILE"\n\
+exec "$@"\n' > /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && \
+    printf 'server {\n\
+    listen 80;\n\
+    server_name _;\n\
+    root /usr/share/nginx/html;\n\
+    index index.html;\n\
+    location / { try_files $uri $uri/ /index.html; }\n\
+    location /env-config.js { add_header Cache-Control "no-cache, no-store, must-revalidate"; add_header Pragma "no-cache"; add_header Expires "0"; }\n\
+    location /health { access_log off; return 200 "healthy\\n"; add_header Content-Type text/plain; }\n\
+}\n' > /etc/nginx/conf.d/default.conf
 
 # Expose port
 EXPOSE 80
