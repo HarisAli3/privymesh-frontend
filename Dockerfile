@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:25-alpine AS builder
 
 # Install dependencies for lib first (better caching)
 WORKDIR /app/lib
