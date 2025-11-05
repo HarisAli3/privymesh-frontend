@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:25-alpine3.21 AS builder
 
 # Install dependencies for lib first (better caching)
 WORKDIR /app/lib
@@ -25,7 +25,7 @@ COPY index.html vite.config.ts tsconfig.json postcss.config.js tailwind.config.j
 RUN yarn build
 
 # Production stage
-FROM nginx:alpine
+FROM nginx:1.29.3-alpine
 
 # Copy built files from builder
 COPY --from=builder /app/build /usr/share/nginx/html
