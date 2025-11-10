@@ -42,21 +42,58 @@ export default function Peers() {
             console.log('Number of peers:', resp.peers?.length || 0);
             const mapped: UiPeer[] = (resp.peers || []).map((p: PeerResponse) => {
                 const lastSeenDate = p.last_seen ? new Date(p.last_seen) : null;
-                const lastSeen = lastSeenDate ? lastSeenDate.toLocaleString() : 'Unknown';
+                
+                // Debug logging
+                console.log(`Peer ${p.name} (ID: ${p.id}):`, {
+                    last_seen_raw: p.last_seen,
+                    last_seen_parsed: lastSeenDate?.toISOString(),
+                    current_time: new Date().toISOString(),
+                });
+                
+                // Format lastSeen as relative time (e.g., "2 minutes ago")
+                let lastSeen = 'Unknown';
+                if (lastSeenDate && !isNaN(lastSeenDate.getTime())) {
+                    const now = new Date();
+                    const diffMs = now.getTime() - lastSeenDate.getTime();
+                    const diffSeconds = Math.floor(diffMs / 1000);
+                    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+                    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                    
+                    // Debug the calculation
+                    console.log(`Peer ${p.name} time diff:`, {
+                        diffMs,
+                        diffSeconds,
+                        diffMinutes: diffMinutes.toFixed(2),
+                        diffHours: diffHours.toFixed(2),
+                    });
+                    
+                    if (diffSeconds < 60) {
+                        lastSeen = `${diffSeconds} second${diffSeconds !== 1 ? 's' : ''} ago`;
+                    } else if (diffMinutes < 60) {
+                        lastSeen = `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+                    } else if (diffHours < 24) {
+                        lastSeen = `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+                    } else {
+                        lastSeen = `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+                    }
+                } else {
+                    console.warn(`Invalid last_seen for peer ${p.name}:`, p.last_seen);
+                }
                 
                 // Determine status based on last_seen timestamp
-                // Consider offline if last seen more than 5 minutes ago
+                // Consider offline if last seen more than 2 minutes ago (heartbeats are sent every 30 seconds)
                 let status: 'online' | 'offline' | 'connecting' = 'offline';
                 if (lastSeenDate && !isNaN(lastSeenDate.getTime())) {
                     const now = new Date();
                     const diffMs = now.getTime() - lastSeenDate.getTime();
                     const diffMinutes = diffMs / (1000 * 60);
-                    // Consider online if seen within last 5 minutes (positive means last_seen is in the past)
+                    // Consider online if seen within last 2 minutes (heartbeats are sent every 30 seconds)
                     // Also allow small negative values for timezone/clock skew
-                    status = diffMinutes <= 5 && diffMinutes >= -1 ? 'online' : 'offline';
-                    console.log(`Peer ${p.name}: last_seen="${p.last_seen}", parsed=${lastSeenDate.toISOString()}, diffMinutes=${diffMinutes.toFixed(2)}, status=${status}`);
+                    // If no heartbeat for 2+ minutes, the app is likely closed
+                    status = diffMinutes <= 2 && diffMinutes >= -1 ? 'online' : 'offline';
+                    console.log(`Peer ${p.name} status: ${status} (${diffMinutes.toFixed(2)} minutes ago)`);
                 } else {
-                    console.warn(`Invalid date for peer ${p.name}: "${p.last_seen}"`);
                     status = 'offline';
                 }
                 
@@ -86,6 +123,13 @@ export default function Peers() {
 
     useEffect(() => {
         fetchPeers();
+        
+        // Auto-refresh peers every 30 seconds to show updated last_seen and status
+        const interval = setInterval(() => {
+            fetchPeers();
+        }, 30000); // 30 seconds
+        
+        return () => clearInterval(interval);
     }, []);
 
     const handlePeerAction = (peerId: string, action: string) => {
