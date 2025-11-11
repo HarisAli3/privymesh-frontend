@@ -43,8 +43,12 @@ export default function Peers() {
             const mapped: UiPeer[] = (resp.peers || []).map((p: PeerResponse) => {
                 const lastSeenDate = p.last_seen ? new Date(p.last_seen) : null;
                 
+                // Use peer_id (user-scoped) instead of id (internal database ID)
+                // Fallback to id for backward compatibility
+                const peerId = p.peer_id ?? p.id;
+                
                 // Debug logging
-                console.log(`Peer ${p.name} (ID: ${p.id}):`, {
+                console.log(`Peer ${p.name} (PeerID: ${peerId}):`, {
                     last_seen_raw: p.last_seen,
                     last_seen_parsed: lastSeenDate?.toISOString(),
                     current_time: new Date().toISOString(),
@@ -98,7 +102,7 @@ export default function Peers() {
                 }
                 
                 return {
-                    id: String(p.id),
+                    id: String(peerId),
                     name: p.name || p.public_key,
                     ip: p.ip_address,
                     status,

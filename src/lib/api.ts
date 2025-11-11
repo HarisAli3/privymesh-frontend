@@ -166,7 +166,8 @@ async function request<T>(path: string, method: HttpMethod = 'GET', body?: unkno
 
 // API surface
 export interface PeerResponse {
-  id: number;
+  id: number; // Internal database ID (kept for backward compatibility)
+  peer_id: number; // User-scoped peer ID (1, 2, 3... per user) - use this for operations
   public_key: string;
   name: string;
   ip_address: string;
@@ -183,8 +184,9 @@ export async function createPeer(payload: { name: string; public_key: string; ip
   return request<PeerResponse>('/api/peers', 'POST', payload);
 }
 
-export async function deletePeer(id: number): Promise<void> {
-  await request(`/api/peers/${id}`, 'DELETE');
+export async function deletePeer(peerId: number): Promise<void> {
+  // Use peer_id (user-scoped) instead of id (internal database ID)
+  await request(`/api/peers/${peerId}`, 'DELETE');
 }
 
 export async function getStats(): Promise<{ total_peers: number; uptime_seconds: number }> {
