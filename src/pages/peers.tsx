@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Icon } from '@/components/icon';
 import { PeerList } from '@/components/peer-list';
-import { getPeers, type PeerResponse } from '@/lib/api';
+import { getPeers, updatePeer, deletePeer, type PeerResponse } from '@/lib/api';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -136,27 +136,53 @@ export default function Peers() {
         return () => clearInterval(interval);
     }, []);
 
-    const handlePeerAction = (peerId: string, action: string) => {
-        console.log(`Peer action: ${action} for peer ${peerId}`);
-        // TODO: Implement actual peer actions
-        switch (action) {
-            case 'view':
-                console.log('Viewing peer details...');
-                break;
-            case 'settings':
-                console.log('Opening peer settings...');
-                break;
-            case 'connect':
-                console.log('Connecting peer...');
-                break;
-            case 'disconnect':
-                console.log('Disconnecting peer...');
-                break;
-            case 'delete':
-                console.log('Removing peer...');
-                break;
-            default:
-                console.log('Unknown action:', action);
+    const handlePeerAction = async (peerId: string, action: string, data?: any) => {
+        console.log(`Peer action: ${action} for peer ${peerId}`, data);
+        
+        try {
+            switch (action) {
+                case 'updateName':
+                    if (data?.name) {
+                        const peerIdNum = parseInt(peerId, 10);
+                        if (isNaN(peerIdNum)) {
+                            console.error('Invalid peer ID:', peerId);
+                            return;
+                        }
+                        await updatePeer(peerIdNum, data.name);
+                        // Refresh peers list to show updated name
+                        await fetchPeers();
+                    }
+                    break;
+                case 'delete':
+                    const deleteIdNum = parseInt(peerId, 10);
+                    if (isNaN(deleteIdNum)) {
+                        console.error('Invalid peer ID:', peerId);
+                        return;
+                    }
+                    if (confirm(`Are you sure you want to delete peer "${peers.find(p => p.id === peerId)?.name || peerId}"?`)) {
+                        await deletePeer(deleteIdNum);
+                        // Refresh peers list
+                        await fetchPeers();
+                    }
+                    break;
+                case 'view':
+                    console.log('Viewing peer details...');
+                    break;
+                case 'settings':
+                    console.log('Opening peer settings...');
+                    break;
+                case 'connect':
+                    console.log('Connecting peer...');
+                    break;
+                case 'disconnect':
+                    console.log('Disconnecting peer...');
+                    break;
+                default:
+                    console.log('Unknown action:', action);
+            }
+        } catch (error) {
+            console.error(`Error performing action ${action}:`, error);
+            alert(`Failed to ${action}: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
     };
 

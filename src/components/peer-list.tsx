@@ -13,7 +13,10 @@ import {
     Activity,
     Eye,
     Settings,
-    Trash2
+    Trash2,
+    Edit,
+    Check,
+    X
 } from 'lucide-react';
 import { Icon } from '@/components/icon';
 import {
@@ -40,7 +43,7 @@ interface Peer {
 
 interface PeerListProps {
     peers?: Peer[];
-    onPeerAction?: (peerId: string, action: string) => void;
+    onPeerAction?: (peerId: string, action: string, data?: any) => void;
     onRefresh?: () => void;
     isLoading?: boolean;
 }
@@ -112,6 +115,8 @@ const mockPeers: Peer[] = [
 ];
 
 export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading = false }: PeerListProps) {
+    const [editingPeerId, setEditingPeerId] = useState<string | null>(null);
+    const [editName, setEditName] = useState<string>('');
     const [selectedPeers, setSelectedPeers] = useState<string[]>([]);
 
     const getStatusIcon = (status: string) => {
@@ -140,9 +145,27 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
         }
     };
 
-    const handlePeerAction = (peerId: string, action: string) => {
+    const handlePeerAction = (peerId: string, action: string, data?: any) => {
         if (onPeerAction) {
-            onPeerAction(peerId, action);
+            onPeerAction(peerId, action, data);
+        }
+    };
+
+    const handleStartEdit = (peer: Peer) => {
+        setEditingPeerId(peer.id);
+        setEditName(peer.name);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingPeerId(null);
+        setEditName('');
+    };
+
+    const handleSaveEdit = (peerId: string) => {
+        if (editName.trim() && editName.trim() !== '') {
+            handlePeerAction(peerId, 'updateName', { name: editName.trim() });
+            setEditingPeerId(null);
+            setEditName('');
         }
     };
 
@@ -251,11 +274,50 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center space-x-2">
-                                                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                                        {peer.name}
-                                                    </p>
-                                                    {peer.isAdmin && (
-                                                        <Icon iconNode={Shield} className="h-4 w-4 text-blue-500" />
+                                                    {editingPeerId === peer.id ? (
+                                                        <div className="flex items-center space-x-2 flex-1">
+                                                            <input
+                                                                type="text"
+                                                                value={editName}
+                                                                onChange={(e) => setEditName(e.target.value)}
+                                                                onKeyDown={(e) => {
+                                                                    if (e.key === 'Enter') {
+                                                                        handleSaveEdit(peer.id);
+                                                                    } else if (e.key === 'Escape') {
+                                                                        handleCancelEdit();
+                                                                    }
+                                                                }}
+                                                                className="text-sm font-medium text-gray-900 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 flex-1 min-w-0"
+                                                                autoFocus
+                                                            />
+                                                            <button
+                                                                onClick={() => handleSaveEdit(peer.id)}
+                                                                className="p-1 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
+                                                                title="Save"
+                                                            >
+                                                                <Icon iconNode={Check} className="h-4 w-4" />
+                                                            </button>
+                                                            <button
+                                                                onClick={handleCancelEdit}
+                                                                className="p-1 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                                                title="Cancel"
+                                                            >
+                                                                <Icon iconNode={X} className="h-4 w-4" />
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <p 
+                                                                className="text-sm font-medium text-gray-900 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
+                                                                onDoubleClick={() => handleStartEdit(peer)}
+                                                                title="Double-click to edit name"
+                                                            >
+                                                                {peer.name}
+                                                            </p>
+                                                            {peer.isAdmin && (
+                                                                <Icon iconNode={Shield} className="h-4 w-4 text-blue-500" />
+                                                            )}
+                                                        </>
                                                     )}
                                                 </div>
                                                 <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
@@ -311,6 +373,10 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                 <DropdownMenuItem onClick={() => handlePeerAction(peer.id, 'settings')}>
                                                     <Icon iconNode={Settings} className="h-4 w-4 mr-2" />
                                                     Settings
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleStartEdit(peer)}>
+                                                    <Icon iconNode={Edit} className="h-4 w-4 mr-2" />
+                                                    Edit Name
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                                 {peer.status === 'online' ? (
