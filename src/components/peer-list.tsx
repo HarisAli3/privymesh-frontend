@@ -116,7 +116,9 @@ const mockPeers: Peer[] = [
 
 export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading = false }: PeerListProps) {
     const [editingPeerId, setEditingPeerId] = useState<string | null>(null);
+    const [editingField, setEditingField] = useState<'name' | 'ip' | null>(null);
     const [editName, setEditName] = useState<string>('');
+    const [editIP, setEditIP] = useState<string>('');
     const [selectedPeers, setSelectedPeers] = useState<string[]>([]);
 
     const getStatusIcon = (status: string) => {
@@ -151,21 +153,40 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
         }
     };
 
-    const handleStartEdit = (peer: Peer) => {
+    const handleStartEdit = (peer: Peer, field: 'name' | 'ip') => {
         setEditingPeerId(peer.id);
-        setEditName(peer.name);
+        setEditingField(field);
+        if (field === 'name') {
+            setEditName(peer.name);
+        } else if (field === 'ip') {
+            setEditIP(peer.ip);
+        }
     };
 
     const handleCancelEdit = () => {
         setEditingPeerId(null);
+        setEditingField(null);
         setEditName('');
+        setEditIP('');
     };
 
-    const handleSaveEdit = (peerId: string) => {
-        if (editName.trim() && editName.trim() !== '') {
+    const handleSaveEdit = (peerId: string, field: 'name' | 'ip') => {
+        if (field === 'name' && editName.trim() && editName.trim() !== '') {
             handlePeerAction(peerId, 'updateName', { name: editName.trim() });
             setEditingPeerId(null);
+            setEditingField(null);
             setEditName('');
+        } else if (field === 'ip' && editIP.trim() && editIP.trim() !== '') {
+            // Basic IP validation
+            const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            if (ipRegex.test(editIP.trim())) {
+                handlePeerAction(peerId, 'updateIP', { ip_address: editIP.trim() });
+                setEditingPeerId(null);
+                setEditingField(null);
+                setEditIP('');
+            } else {
+                alert('Please enter a valid IP address (e.g., 10.0.0.1)');
+            }
         }
     };
 
@@ -274,7 +295,7 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center space-x-2">
-                                                    {editingPeerId === peer.id ? (
+                                                    {editingPeerId === peer.id && editingField === 'name' ? (
                                                         <div className="flex items-center space-x-2 flex-1">
                                                             <input
                                                                 type="text"
@@ -282,7 +303,7 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                                 onChange={(e) => setEditName(e.target.value)}
                                                                 onKeyDown={(e) => {
                                                                     if (e.key === 'Enter') {
-                                                                        handleSaveEdit(peer.id);
+                                                                        handleSaveEdit(peer.id, 'name');
                                                                     } else if (e.key === 'Escape') {
                                                                         handleCancelEdit();
                                                                     }
@@ -291,7 +312,7 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                                 autoFocus
                                                             />
                                                             <button
-                                                                onClick={() => handleSaveEdit(peer.id)}
+                                                                onClick={() => handleSaveEdit(peer.id, 'name')}
                                                                 className="p-1 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
                                                                 title="Save"
                                                             >
@@ -309,7 +330,7 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                         <>
                                                             <p 
                                                                 className="text-sm font-medium text-gray-900 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
-                                                                onDoubleClick={() => handleStartEdit(peer)}
+                                                                onDoubleClick={() => handleStartEdit(peer, 'name')}
                                                                 title="Double-click to edit name"
                                                             >
                                                                 {peer.name}
@@ -348,9 +369,49 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className="text-sm text-gray-900 dark:text-white font-mono">
-                                            {peer.ip}
-                                        </span>
+                                        <div className="flex items-center space-x-2">
+                                            {editingPeerId === peer.id && editingField === 'ip' ? (
+                                                <div className="flex items-center space-x-2 flex-1">
+                                                    <input
+                                                        type="text"
+                                                        value={editIP}
+                                                        onChange={(e) => setEditIP(e.target.value)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                handleSaveEdit(peer.id, 'ip');
+                                                            } else if (e.key === 'Escape') {
+                                                                handleCancelEdit();
+                                                            }
+                                                        }}
+                                                        className="text-sm font-mono text-gray-900 dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 flex-1 min-w-0"
+                                                        placeholder="10.0.0.1"
+                                                        autoFocus
+                                                    />
+                                                    <button
+                                                        onClick={() => handleSaveEdit(peer.id, 'ip')}
+                                                        className="p-1 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
+                                                        title="Save"
+                                                    >
+                                                        <Icon iconNode={Check} className="h-4 w-4" />
+                                                    </button>
+                                                    <button
+                                                        onClick={handleCancelEdit}
+                                                        className="p-1 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                                        title="Cancel"
+                                                    >
+                                                        <Icon iconNode={X} className="h-4 w-4" />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <span 
+                                                    className="text-sm text-gray-900 dark:text-white font-mono cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
+                                                    onDoubleClick={() => handleStartEdit(peer, 'ip')}
+                                                    title="Double-click to edit IP address"
+                                                >
+                                                    {peer.ip}
+                                                </span>
+                                            )}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400">
@@ -374,9 +435,13 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                     <Icon iconNode={Settings} className="h-4 w-4 mr-2" />
                                                     Settings
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleStartEdit(peer)}>
+                                                <DropdownMenuItem onClick={() => handleStartEdit(peer, 'name')}>
                                                     <Icon iconNode={Edit} className="h-4 w-4 mr-2" />
                                                     Edit Name
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleStartEdit(peer, 'ip')}>
+                                                    <Icon iconNode={Edit} className="h-4 w-4 mr-2" />
+                                                    Edit IP Address
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                                 {peer.status === 'online' ? (

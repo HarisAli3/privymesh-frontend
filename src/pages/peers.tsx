@@ -148,8 +148,20 @@ export default function Peers() {
                             console.error('Invalid peer ID:', peerId);
                             return;
                         }
-                        await updatePeer(peerIdNum, data.name);
+                        await updatePeer(peerIdNum, { name: data.name });
                         // Refresh peers list to show updated name
+                        await fetchPeers();
+                    }
+                    break;
+                case 'updateIP':
+                    if (data?.ip_address) {
+                        const peerIdNum = parseInt(peerId, 10);
+                        if (isNaN(peerIdNum)) {
+                            console.error('Invalid peer ID:', peerId);
+                            return;
+                        }
+                        await updatePeer(peerIdNum, { ip_address: data.ip_address });
+                        // Refresh peers list to show updated IP address
                         await fetchPeers();
                     }
                     break;

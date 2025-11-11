@@ -184,9 +184,9 @@ export async function createPeer(payload: { name: string; public_key: string; ip
   return request<PeerResponse>('/api/peers', 'POST', payload);
 }
 
-export async function updatePeer(peerId: number, name: string): Promise<PeerResponse> {
+export async function updatePeer(peerId: number, updates: { name?: string; ip_address?: string }): Promise<PeerResponse> {
   // Use peer_id (user-scoped) instead of id (internal database ID)
-  return request<PeerResponse>(`/api/peers/${peerId}`, 'PATCH', { name });
+  return request<PeerResponse>(`/api/peers/${peerId}`, 'PATCH', updates);
 }
 
 export async function deletePeer(peerId: number): Promise<void> {
