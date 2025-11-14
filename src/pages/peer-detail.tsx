@@ -174,7 +174,7 @@ export default function PeerDetail() {
                                     {/* Detail Row - Responsive */}
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Network} className="h-4 w-4" />
+                                            <Icon iconNode={Network} className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                             PrivyMesh IP Address (WireGuard assigned IP)
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
@@ -184,7 +184,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Server} className="h-4 w-4" />
+                                            <Icon iconNode={Server} className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                                             Public Endpoint
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
@@ -194,7 +194,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Globe} className="h-4 w-4" />
+                                            <Icon iconNode={Globe} className="h-4 w-4 text-green-600 dark:text-green-400" />
                                             Public IP
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
@@ -204,7 +204,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Router} className="h-4 w-4" />
+                                            <Icon iconNode={Router} className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                                             NAT Type
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
@@ -220,7 +220,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Monitor} className="h-4 w-4" />
+                                            <Icon iconNode={Monitor} className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                                             Hostname
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
@@ -230,7 +230,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={MapPin} className="h-4 w-4" />
+                                            <Icon iconNode={MapPin} className="h-4 w-4 text-red-600 dark:text-red-400" />
                                             Region
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
@@ -240,7 +240,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Monitor} className="h-4 w-4" />
+                                            <Icon iconNode={Monitor} className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
                                             Operating System
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
@@ -250,7 +250,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Hash} className="h-4 w-4" />
+                                            <Icon iconNode={Hash} className="h-4 w-4 text-pink-600 dark:text-pink-400" />
                                             Serial Number
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
@@ -260,7 +260,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Calendar} className="h-4 w-4" />
+                                            <Icon iconNode={Calendar} className="h-4 w-4 text-teal-600 dark:text-teal-400" />
                                             Device Registered On
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
@@ -270,7 +270,7 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            <Icon iconNode={Clock} className="h-4 w-4" />
+                                            <Icon iconNode={Clock} className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                                             Last Seen
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
