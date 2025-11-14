@@ -43,9 +43,9 @@ export default function Peers() {
             const mapped: UiPeer[] = (resp.peers || []).map((p: PeerResponse) => {
                 const lastSeenDate = p.last_seen ? new Date(p.last_seen) : null;
                 
-                // Use peer_id (user-scoped) instead of id (internal database ID)
-                // Fallback to id for backward compatibility
-                const peerId = p.peer_id ?? p.id;
+                // Use peer_id (user-scoped random string) instead of id (internal database ID)
+                // Fallback to id converted to string for backward compatibility
+                const peerId = p.peer_id ?? String(p.id);
                 
                 // Debug logging
                 console.log(`Peer ${p.name} (PeerID: ${peerId}):`, {
@@ -143,36 +143,33 @@ export default function Peers() {
             switch (action) {
                 case 'updateName':
                     if (data?.name) {
-                        const peerIdNum = parseInt(peerId, 10);
-                        if (isNaN(peerIdNum)) {
+                        if (!peerId || peerId.trim() === '') {
                             console.error('Invalid peer ID:', peerId);
                             return;
                         }
-                        await updatePeer(peerIdNum, { name: data.name });
+                        await updatePeer(peerId, { name: data.name });
                         // Refresh peers list to show updated name
                         await fetchPeers();
                     }
                     break;
                 case 'updateIP':
                     if (data?.ip_address) {
-                        const peerIdNum = parseInt(peerId, 10);
-                        if (isNaN(peerIdNum)) {
+                        if (!peerId || peerId.trim() === '') {
                             console.error('Invalid peer ID:', peerId);
                             return;
                         }
-                        await updatePeer(peerIdNum, { ip_address: data.ip_address });
+                        await updatePeer(peerId, { ip_address: data.ip_address });
                         // Refresh peers list to show updated IP address
                         await fetchPeers();
                     }
                     break;
                 case 'delete':
-                    const deleteIdNum = parseInt(peerId, 10);
-                    if (isNaN(deleteIdNum)) {
+                    if (!peerId || peerId.trim() === '') {
                         console.error('Invalid peer ID:', peerId);
                         return;
                     }
                     if (confirm(`Are you sure you want to delete peer "${peers.find(p => p.id === peerId)?.name || peerId}"?`)) {
-                        await deletePeer(deleteIdNum);
+                        await deletePeer(peerId);
                         // Refresh peers list
                         await fetchPeers();
                     }

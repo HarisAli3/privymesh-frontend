@@ -57,13 +57,11 @@ export default function EditPeer() {
             try {
                 setIsLoading(true);
                 setError(null);
-                const peerIdNum = parseInt(peerId, 10);
-                
-                if (isNaN(peerIdNum)) {
+                if (!peerId || peerId.trim() === '') {
                     throw new Error('Invalid peer ID');
                 }
 
-                const peerData = await getPeer(peerIdNum);
+                const peerData = await getPeer(peerId);
                 const extendedPeer = peerData as ExtendedPeerResponse;
                 setPeer(extendedPeer);
                 setName(extendedPeer.name || '');
@@ -105,9 +103,8 @@ export default function EditPeer() {
 
         try {
             setIsSaving(true);
-            const peerIdNum = parseInt(peerId, 10);
             
-            if (isNaN(peerIdNum)) {
+            if (!peerId || peerId.trim() === '') {
                 throw new Error('Invalid peer ID');
             }
 
@@ -127,7 +124,7 @@ export default function EditPeer() {
                 return;
             }
 
-            await updatePeer(peerIdNum, updates);
+            await updatePeer(peerId, updates);
             
             // Navigate back to peer detail page
             navigate(`/peers/${peerId}`);

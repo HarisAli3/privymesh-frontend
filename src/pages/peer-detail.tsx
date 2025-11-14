@@ -45,13 +45,12 @@ export default function PeerDetail() {
             try {
                 setIsLoading(true);
                 setError(null);
-                const peerIdNum = parseInt(peerId, 10);
                 
-                if (isNaN(peerIdNum)) {
+                if (!peerId || peerId.trim() === '') {
                     throw new Error('Invalid peer ID');
                 }
 
-                const peerData = await getPeer(peerIdNum);
+                const peerData = await getPeer(peerId);
                 setPeer(peerData as ExtendedPeerResponse);
             } catch (err) {
                 console.error('Error fetching peer:', err);

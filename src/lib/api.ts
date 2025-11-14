@@ -167,7 +167,7 @@ async function request<T>(path: string, method: HttpMethod = 'GET', body?: unkno
 // API surface
 export interface PeerResponse {
   id: number; // Internal database ID (kept for backward compatibility)
-  peer_id: number; // User-scoped peer ID (1, 2, 3... per user) - use this for operations
+  peer_id: string; // User-scoped peer ID (random string, NetBird-style) - use this for operations
   public_key: string;
   name: string;
   ip_address: string;
@@ -184,7 +184,7 @@ export async function getPeers(): Promise<{ peers: PeerResponse[] }> {
   return request<{ peers: PeerResponse[] }>('/api/peers');
 }
 
-export async function getPeer(peerId: number): Promise<PeerResponse> {
+export async function getPeer(peerId: string): Promise<PeerResponse> {
   // Use peer_id (user-scoped) instead of id (internal database ID)
   return request<PeerResponse>(`/api/peers/${peerId}`, 'GET');
 }
@@ -193,12 +193,12 @@ export async function createPeer(payload: { name: string; public_key: string; ip
   return request<PeerResponse>('/api/peers', 'POST', payload);
 }
 
-export async function updatePeer(peerId: number, updates: { name?: string; ip_address?: string }): Promise<PeerResponse> {
+export async function updatePeer(peerId: string, updates: { name?: string; ip_address?: string }): Promise<PeerResponse> {
   // Use peer_id (user-scoped) instead of id (internal database ID)
   return request<PeerResponse>(`/api/peers/${peerId}`, 'PATCH', updates);
 }
 
-export async function deletePeer(peerId: number): Promise<void> {
+export async function deletePeer(peerId: string): Promise<void> {
   // Use peer_id (user-scoped) instead of id (internal database ID)
   await request(`/api/peers/${peerId}`, 'DELETE');
 }
