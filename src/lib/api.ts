@@ -180,6 +180,11 @@ export async function getPeers(): Promise<{ peers: PeerResponse[] }> {
   return request<{ peers: PeerResponse[] }>('/api/peers');
 }
 
+export async function getPeer(peerId: number): Promise<PeerResponse> {
+  // Use peer_id (user-scoped) instead of id (internal database ID)
+  return request<PeerResponse>(`/api/peers/${peerId}`, 'GET');
+}
+
 export async function createPeer(payload: { name: string; public_key: string; ip_address: string }): Promise<PeerResponse> {
   return request<PeerResponse>('/api/peers', 'POST', payload);
 }

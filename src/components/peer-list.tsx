@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -115,6 +116,7 @@ const mockPeers: Peer[] = [
 ];
 
 export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading = false }: PeerListProps) {
+    const navigate = useNavigate();
     const [editingPeerId, setEditingPeerId] = useState<string | null>(null);
     const [editingField, setEditingField] = useState<'name' | 'ip' | null>(null);
     const [editName, setEditName] = useState<string>('');
@@ -278,9 +280,10 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                             {peers.map((peer) => (
                                 <tr 
                                     key={peer.id}
-                                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150"
+                                    onClick={() => navigate(`/peers/${peer.id}`)}
+                                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 cursor-pointer"
                                 >
-                                    <td className="px-6 py-4">
+                                    <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                                         <input
                                             type="checkbox"
                                             checked={selectedPeers.includes(peer.id)}
@@ -296,7 +299,7 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center space-x-2">
                                                     {editingPeerId === peer.id && editingField === 'name' ? (
-                                                        <div className="flex items-center space-x-2 flex-1">
+                                                        <div className="flex items-center space-x-2 flex-1" onClick={(e) => e.stopPropagation()}>
                                                             <input
                                                                 type="text"
                                                                 value={editName}
@@ -329,8 +332,11 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                     ) : (
                                                         <>
                                                             <p 
-                                                                className="text-sm font-medium text-gray-900 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
-                                                                onDoubleClick={() => handleStartEdit(peer, 'name')}
+                                                                className="text-sm font-medium text-gray-900 dark:text-white truncate hover:text-blue-600 dark:hover:text-blue-400"
+                                                                onDoubleClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleStartEdit(peer, 'name');
+                                                                }}
                                                                 title="Double-click to edit name"
                                                             >
                                                                 {peer.name}
@@ -371,7 +377,7 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                     <td className="px-6 py-4">
                                         <div className="flex items-center space-x-2">
                                             {editingPeerId === peer.id && editingField === 'ip' ? (
-                                                <div className="flex items-center space-x-2 flex-1">
+                                                <div className="flex items-center space-x-2 flex-1" onClick={(e) => e.stopPropagation()}>
                                                     <input
                                                         type="text"
                                                         value={editIP}
@@ -404,8 +410,11 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                 </div>
                                             ) : (
                                                 <span 
-                                                    className="text-sm text-gray-900 dark:text-white font-mono cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
-                                                    onDoubleClick={() => handleStartEdit(peer, 'ip')}
+                                                    className="text-sm text-gray-900 dark:text-white font-mono hover:text-blue-600 dark:hover:text-blue-400"
+                                                    onDoubleClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleStartEdit(peer, 'ip');
+                                                    }}
                                                     title="Double-click to edit IP address"
                                                 >
                                                     {peer.ip}
@@ -419,7 +428,7 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                             <span>{peer.lastSeen}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
+                                    <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0">

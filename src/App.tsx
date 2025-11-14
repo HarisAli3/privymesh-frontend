@@ -10,6 +10,8 @@ import AuthCallback from '@/pages/auth-callback';
 import SilentCallback from '@/pages/silent-callback';
 import Peers from '@/pages/peers';
 import AddPeer from '@/pages/add-peer';
+import PeerDetail from '@/pages/peer-detail';
+import EditPeer from '@/pages/edit-peer';
 import Settings from '@/pages/settings';
 
 // Initialize theme on app start
@@ -35,6 +37,16 @@ function App() {
             <Route path="/peers/add" element={
               <ProtectedRoute>
                 <AddPeer />
+              </ProtectedRoute>
+            } />
+            <Route path="/peers/:peerId" element={
+              <ProtectedRoute>
+                <PeerDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/peers/:peerId/edit" element={
+              <ProtectedRoute>
+                <EditPeer />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
