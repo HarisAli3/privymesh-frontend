@@ -16,7 +16,9 @@ import {
     Monitor, 
     Hash, 
     Calendar,
-    Clock
+    Clock,
+    Copy,
+    Check
 } from 'lucide-react';
 
 // Extended interface to handle additional fields that might be in the API response
@@ -34,6 +36,7 @@ export default function PeerDetail() {
     const [peer, setPeer] = useState<ExtendedPeerResponse | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [copied, setCopied] = useState<Record<string, boolean>>({});
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -118,6 +121,20 @@ export default function PeerDetail() {
         }
     };
 
+    const handleCopy = async (id: string, text: string) => {
+        if (!text || text === 'N/A') return;
+        
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopied({ ...copied, [id]: true });
+            setTimeout(() => {
+                setCopied((prev: Record<string, boolean>) => ({ ...prev, [id]: false }));
+            }, 2000);
+        } catch (e) {
+            console.error('Copy failed', e);
+        }
+    };
+
     return (
         <AppSidebarLayout breadcrumbs={breadcrumbs}>
             <div className="max-w-7xl mx-auto">
@@ -177,9 +194,23 @@ export default function PeerDetail() {
                                             <Icon iconNode={Network} className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                             PrivyMesh IP Address (WireGuard assigned IP)
                                         </span>
-                                        <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
-                                            {peer.ip_address || 'N/A'}
-                                        </span>
+                                        <div className="flex items-center gap-2 text-left sm:text-right">
+                                            <span className="text-sm text-gray-900 dark:text-white font-mono break-all">
+                                                {peer.ip_address || 'N/A'}
+                                            </span>
+                                            {peer.ip_address && (
+                                                <button
+                                                    onClick={() => handleCopy('ip_address', peer.ip_address || '')}
+                                                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                                    title="Copy IP address"
+                                                >
+                                                    <Icon 
+                                                        iconNode={copied['ip_address'] ? Check : Copy} 
+                                                        className={`h-3.5 w-3.5 ${copied['ip_address'] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} 
+                                                    />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -187,9 +218,23 @@ export default function PeerDetail() {
                                             <Icon iconNode={Server} className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                                             Public Endpoint
                                         </span>
-                                        <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
-                                            {peer.endpoint || 'N/A'}
-                                        </span>
+                                        <div className="flex items-center gap-2 text-left sm:text-right">
+                                            <span className="text-sm text-gray-900 dark:text-white font-mono break-all">
+                                                {peer.endpoint || 'N/A'}
+                                            </span>
+                                            {peer.endpoint && (
+                                                <button
+                                                    onClick={() => handleCopy('endpoint', peer.endpoint || '')}
+                                                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                                    title="Copy endpoint"
+                                                >
+                                                    <Icon 
+                                                        iconNode={copied['endpoint'] ? Check : Copy} 
+                                                        className={`h-3.5 w-3.5 ${copied['endpoint'] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} 
+                                                    />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -197,9 +242,23 @@ export default function PeerDetail() {
                                             <Icon iconNode={Globe} className="h-4 w-4 text-green-600 dark:text-green-400" />
                                             Public IP
                                         </span>
-                                        <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
-                                            {peer.public_ip || 'N/A'}
-                                        </span>
+                                        <div className="flex items-center gap-2 text-left sm:text-right">
+                                            <span className="text-sm text-gray-900 dark:text-white font-mono break-all">
+                                                {peer.public_ip || 'N/A'}
+                                            </span>
+                                            {peer.public_ip && (
+                                                <button
+                                                    onClick={() => handleCopy('public_ip', peer.public_ip || '')}
+                                                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                                    title="Copy public IP"
+                                                >
+                                                    <Icon 
+                                                        iconNode={copied['public_ip'] ? Check : Copy} 
+                                                        className={`h-3.5 w-3.5 ${copied['public_ip'] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} 
+                                                    />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -223,9 +282,23 @@ export default function PeerDetail() {
                                             <Icon iconNode={Monitor} className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                                             Hostname
                                         </span>
-                                        <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
-                                            {peer.name || 'N/A'}
-                                        </span>
+                                        <div className="flex items-center gap-2 text-left sm:text-right">
+                                            <span className="text-sm text-gray-900 dark:text-white break-words">
+                                                {peer.name || 'N/A'}
+                                            </span>
+                                            {peer.name && (
+                                                <button
+                                                    onClick={() => handleCopy('hostname', peer.name || '')}
+                                                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                                    title="Copy hostname"
+                                                >
+                                                    <Icon 
+                                                        iconNode={copied['hostname'] ? Check : Copy} 
+                                                        className={`h-3.5 w-3.5 ${copied['hostname'] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} 
+                                                    />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -253,9 +326,23 @@ export default function PeerDetail() {
                                             <Icon iconNode={Hash} className="h-4 w-4 text-pink-600 dark:text-pink-400" />
                                             Serial Number
                                         </span>
-                                        <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
-                                            {peer.serial_number || 'N/A'}
-                                        </span>
+                                        <div className="flex items-center gap-2 text-left sm:text-right">
+                                            <span className="text-sm text-gray-900 dark:text-white font-mono break-all">
+                                                {peer.serial_number || 'N/A'}
+                                            </span>
+                                            {peer.serial_number && (
+                                                <button
+                                                    onClick={() => handleCopy('serial_number', peer.serial_number || '')}
+                                                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                                    title="Copy serial number"
+                                                >
+                                                    <Icon 
+                                                        iconNode={copied['serial_number'] ? Check : Copy} 
+                                                        className={`h-3.5 w-3.5 ${copied['serial_number'] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} 
+                                                    />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
