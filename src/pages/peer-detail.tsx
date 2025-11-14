@@ -10,6 +10,7 @@ import { Edit } from 'lucide-react';
 
 // Extended interface to handle additional fields that might be in the API response
 interface ExtendedPeerResponse extends PeerResponse {
+    endpoint?: string; // Public endpoint (may be STUN-discovered)
     public_ip?: string;
     region?: string;
     operating_system?: string;
@@ -166,6 +167,15 @@ export default function PeerDetail() {
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
                                             {peer.ip_address || 'N/A'}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                            Public Endpoint
+                                        </span>
+                                        <span className="text-sm text-gray-900 dark:text-white font-mono text-left sm:text-right break-all">
+                                            {peer.endpoint || 'N/A'}
                                         </span>
                                     </div>
                                     

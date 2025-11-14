@@ -171,6 +171,7 @@ export interface PeerResponse {
   public_key: string;
   name: string;
   ip_address: string;
+  endpoint?: string; // Public endpoint for peer (e.g., "203.0.113.10:51820") - may be STUN-discovered
   public_ip?: string; // Device's public IP address
   region?: string; // Device region/location
   operating_system?: string; // Device operating system
@@ -201,6 +202,18 @@ export async function updatePeer(peerId: string, updates: { name?: string; ip_ad
 export async function deletePeer(peerId: string): Promise<void> {
   // Use peer_id (user-scoped) instead of id (internal database ID)
   await request(`/api/peers/${peerId}`, 'DELETE');
+}
+
+// STUN/TURN configuration types and functions
+export interface STUNTURNConfig {
+  stun_servers: string[];
+  turn_server?: string;
+  turn_username?: string;
+  turn_realm?: string;
+}
+
+export async function getSTUNConfig(): Promise<STUNTURNConfig> {
+  return request<STUNTURNConfig>('/api/stun-config');
 }
 
 export async function getStats(): Promise<{ total_peers: number; uptime_seconds: number }> {
