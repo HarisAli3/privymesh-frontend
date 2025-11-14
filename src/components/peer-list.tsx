@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { MouseEvent } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -17,7 +18,8 @@ import {
     Trash2,
     Edit,
     Check,
-    X
+    X,
+    Copy
 } from 'lucide-react';
 import { Icon } from '@/components/icon';
 import {
@@ -122,6 +124,7 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
     const [editName, setEditName] = useState<string>('');
     const [editIP, setEditIP] = useState<string>('');
     const [selectedPeers, setSelectedPeers] = useState<string[]>([]);
+    const [copiedIPs, setCopiedIPs] = useState<Record<string, boolean>>({});
 
     const getStatusIcon = (status: string) => {
         switch (status) {
@@ -205,6 +208,24 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
             setSelectedPeers([]);
         } else {
             setSelectedPeers(peers.map(peer => peer.id));
+        }
+    };
+
+    const handleCopyIP = async (peerId: string, ipAddress: string, e?: MouseEvent) => {
+        if (e) {
+            e.stopPropagation(); // Prevent row click navigation
+        }
+        
+        if (!ipAddress) return;
+        
+        try {
+            await navigator.clipboard.writeText(ipAddress);
+            setCopiedIPs({ ...copiedIPs, [peerId]: true });
+            setTimeout(() => {
+                setCopiedIPs((prev: Record<string, boolean>) => ({ ...prev, [peerId]: false }));
+            }, 2000);
+        } catch (error) {
+            console.error('Copy failed', error);
         }
     };
 
@@ -409,16 +430,28 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <span 
-                                                    className="text-sm text-gray-900 dark:text-white font-mono hover:text-blue-600 dark:hover:text-blue-400"
-                                                    onDoubleClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleStartEdit(peer, 'ip');
-                                                    }}
-                                                    title="Double-click to edit IP address"
-                                                >
-                                                    {peer.ip}
-                                                </span>
+                                                <div className="flex items-center space-x-2">
+                                                    <span 
+                                                        className="text-sm text-gray-900 dark:text-white font-mono hover:text-blue-600 dark:hover:text-blue-400"
+                                                        onDoubleClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleStartEdit(peer, 'ip');
+                                                        }}
+                                                        title="Double-click to edit IP address"
+                                                    >
+                                                        {peer.ip}
+                                                    </span>
+                                                    <button
+                                                        onClick={(e) => handleCopyIP(peer.id, peer.ip, e)}
+                                                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                                        title="Copy IP address"
+                                                    >
+                                                        <Icon 
+                                                            iconNode={copiedIPs[peer.id] ? Check : Copy} 
+                                                            className={`h-3.5 w-3.5 ${copiedIPs[peer.id] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} 
+                                                        />
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     </td>
