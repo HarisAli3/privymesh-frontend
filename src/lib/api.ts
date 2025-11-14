@@ -176,6 +176,7 @@ export interface PeerResponse {
   region?: string; // Device region/location
   operating_system?: string; // Device operating system
   serial_number?: string; // Device serial number
+  nat_type?: string; // Detected NAT type (full_cone, restricted_cone, port_restricted, symmetric)
   user_id: string;
   last_seen: string;
   created_at: string;

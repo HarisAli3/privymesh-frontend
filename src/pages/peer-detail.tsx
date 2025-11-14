@@ -190,6 +190,21 @@ export default function PeerDetail() {
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                            NAT Type
+                                        </span>
+                                        <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
+                                            {peer.nat_type ? (
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                                    {peer.nat_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                                </span>
+                                            ) : (
+                                                'N/A'
+                                            )}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                                             Hostname
                                         </span>
                                         <span className="text-sm text-gray-900 dark:text-white text-left sm:text-right break-words">
