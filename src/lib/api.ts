@@ -171,6 +171,10 @@ export interface PeerResponse {
   public_key: string;
   name: string;
   ip_address: string;
+  public_ip?: string; // Device's public IP address
+  region?: string; // Device region/location
+  operating_system?: string; // Device operating system
+  serial_number?: string; // Device serial number
   user_id: string;
   last_seen: string;
   created_at: string;

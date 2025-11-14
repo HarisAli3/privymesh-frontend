@@ -2,7 +2,7 @@ import AppSidebarLayout from '@/layouts/AppSidebarLayout';
 import { type BreadcrumbItem } from '@/types';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getPeers, updatePeer, type PeerResponse } from '@/lib/api';
+import { getPeer, updatePeer, type PeerResponse } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -63,15 +63,7 @@ export default function EditPeer() {
                     throw new Error('Invalid peer ID');
                 }
 
-                // Fetch all peers and find the one matching the peerId
-                // Note: Backend doesn't have a GET /api/peers/{id} endpoint yet
-                const response = await getPeers();
-                const peerData = response.peers.find(p => (p.peer_id ?? p.id) === peerIdNum);
-                
-                if (!peerData) {
-                    throw new Error('Peer not found');
-                }
-
+                const peerData = await getPeer(peerIdNum);
                 const extendedPeer = peerData as ExtendedPeerResponse;
                 setPeer(extendedPeer);
                 setName(extendedPeer.name || '');
