@@ -38,21 +38,12 @@ export default function Peers() {
         try {
             setIsLoading(true);
             const resp = await getPeers();
-            console.log('Fetched peers response:', resp);
-            console.log('Number of peers:', resp.peers?.length || 0);
             const mapped: UiPeer[] = (resp.peers || []).map((p: PeerResponse) => {
                 const lastSeenDate = p.last_seen ? new Date(p.last_seen) : null;
                 
                 // Use peer_id (user-scoped random string) instead of id (internal database ID)
                 // Fallback to id converted to string for backward compatibility
                 const peerId = p.peer_id ?? String(p.id);
-                
-                // Debug logging
-                console.log(`Peer ${p.name} (PeerID: ${peerId}):`, {
-                    last_seen_raw: p.last_seen,
-                    last_seen_parsed: lastSeenDate?.toISOString(),
-                    current_time: new Date().toISOString(),
-                });
                 
                 // Format lastSeen as relative time (e.g., "2 minutes ago")
                 let lastSeen = 'Unknown';
@@ -63,14 +54,6 @@ export default function Peers() {
                     const diffMinutes = Math.floor(diffMs / (1000 * 60));
                     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-                    
-                    // Debug the calculation
-                    console.log(`Peer ${p.name} time diff:`, {
-                        diffMs,
-                        diffSeconds,
-                        diffMinutes: diffMinutes.toFixed(2),
-                        diffHours: diffHours.toFixed(2),
-                    });
                     
                     if (diffSeconds < 60) {
                         lastSeen = `${diffSeconds} second${diffSeconds !== 1 ? 's' : ''} ago`;
@@ -96,7 +79,6 @@ export default function Peers() {
                     // Also allow small negative values for timezone/clock skew
                     // If no heartbeat for 2+ minutes, the app is likely closed
                     status = diffMinutes <= 2 && diffMinutes >= -1 ? 'online' : 'offline';
-                    console.log(`Peer ${p.name} status: ${status} (${diffMinutes.toFixed(2)} minutes ago)`);
                 } else {
                     status = 'offline';
                 }
@@ -110,9 +92,6 @@ export default function Peers() {
                 };
             });
             setPeers(mapped);
-            if (mapped.length === 0) {
-                console.warn('No peers found in response');
-            }
         } catch (e) {
             console.error('Error fetching peers:', e);
             setPeers([]);
@@ -137,8 +116,6 @@ export default function Peers() {
     }, []);
 
     const handlePeerAction = async (peerId: string, action: string, data?: any) => {
-        console.log(`Peer action: ${action} for peer ${peerId}`, data);
-        
         try {
             switch (action) {
                 case 'updateName':
@@ -175,19 +152,13 @@ export default function Peers() {
                     }
                     break;
                 case 'view':
-                    console.log('Viewing peer details...');
-                    break;
                 case 'settings':
-                    console.log('Opening peer settings...');
-                    break;
                 case 'connect':
-                    console.log('Connecting peer...');
-                    break;
                 case 'disconnect':
-                    console.log('Disconnecting peer...');
+                    // Actions not yet implemented
                     break;
                 default:
-                    console.log('Unknown action:', action);
+                    console.warn('Unknown peer action:', action);
             }
         } catch (error) {
             console.error(`Error performing action ${action}:`, error);
