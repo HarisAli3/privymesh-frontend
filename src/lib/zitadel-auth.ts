@@ -54,11 +54,6 @@ if (!ZITADEL_CONFIG.clientId) {
   throw new Error('ZITADEL_CLIENT_ID is required. Please set ZITADEL_CLIENT_ID or AUTH_CLIENT_ID environment variable.');
 }
 
-console.log('🔐 Zitadel Configuration:');
-console.log('- Instance URL:', ZITADEL_CONFIG.instanceUrl);
-console.log('- Client ID:', ZITADEL_CONFIG.clientId);
-console.log('- Redirect URI:', ZITADEL_CONFIG.redirectUri);
-
 const zitadelConfig: ZitadelConfig = {
   authority: ZITADEL_CONFIG.instanceUrl,
   client_id: ZITADEL_CONFIG.clientId,
@@ -119,16 +114,8 @@ class ZitadelAuthService {
     try {
       this.user = await zitadel.userManager.getUser();
       if (this.user && !this.user.expired) {
-        console.log('[ZitadelAuth] Initializing user, profile from token:', {
-          name: this.user.profile?.name,
-          email: this.user.profile?.email,
-        });
         // Apply manual profile updates if any (loaded from localStorage)
         this.applyManualProfileUpdates(this.user);
-        console.log('[ZitadelAuth] Profile after applying manual updates:', {
-          name: this.user.profile?.name,
-          email: this.user.profile?.email,
-        });
         // Update cookie with the updated profile data
         this.setUserCookie(this.user);
       } else {
