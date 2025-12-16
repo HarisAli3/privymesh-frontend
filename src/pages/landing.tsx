@@ -35,8 +35,8 @@ export default function Landing() {
                                 <a href="#docs" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">
                                     Docs
                                 </a>
-                                <a href="#install" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">
-                                    Install
+                                <a href="#pricing" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">
+                                    Pricing
                                 </a>
                             </div>
                         </div>
