@@ -13,6 +13,10 @@ import AddPeer from '@/pages/add-peer';
 import PeerDetail from '@/pages/peer-detail';
 import EditPeer from '@/pages/edit-peer';
 import Settings from '@/pages/settings';
+import About from '@/pages/about';
+import Contact from '@/pages/contact';
+import Docs from '@/pages/docs';
+import Pricing from '@/pages/pricing';
 
 // Initialize theme on app start
 initializeTheme();
@@ -56,6 +60,10 @@ function App() {
             } />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/docs" element={<Docs />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/pm-auth" element={<AuthCallback />} />
             <Route path="/pm-silent-auth" element={<SilentCallback />} />
           </Routes>
