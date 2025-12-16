@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import AppLogoIcon from '@/components/app-logo-icon';
-import { ArrowLeft, Check, Zap, Shield, Globe, Users, Network, Lock } from 'lucide-react';
+import { ArrowLeft, Check, Zap, Shield, Globe } from 'lucide-react';
 
 export default function Pricing() {
     return (
