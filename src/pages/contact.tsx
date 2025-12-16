@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import AppLogoIcon from '@/components/app-logo-icon';
-import { ArrowLeft, Mail, MessageSquare, Book } from 'lucide-react';
+import { Mail, MessageSquare, Book } from 'lucide-react';
 
 export default function Contact() {
     return (
@@ -32,16 +32,6 @@ export default function Contact() {
                                 </Link>
                             </div>
                         </div>
-
-                        <div className="flex items-center space-x-4">
-                            <Link
-                                to="/"
-                                className="inline-flex items-center text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors"
-                            >
-                                <ArrowLeft className="w-4 h-4 mr-2" />
-                                Back to Home
-                            </Link>
-                        </div>
                     </div>
                 </div>
             </nav>
@@ -65,63 +55,79 @@ export default function Contact() {
                         {/* Contact Form */}
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                                Send us a message
+                                Contact our team
                             </h2>
                             <form className="space-y-6">
                                 <div>
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Name
+                                        Name <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         id="name"
                                         name="name"
+                                        required
                                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="Your name"
                                     />
                                 </div>
                                 <div>
                                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Email
+                                        Email <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="email"
                                         id="email"
                                         name="email"
+                                        required
                                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="your.email@example.com"
                                     />
                                 </div>
                                 <div>
                                     <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Subject
+                                        Subject <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         id="subject"
                                         name="subject"
+                                        required
                                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="What's this about?"
                                     />
                                 </div>
                                 <div>
                                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Message
+                                        Message <span className="text-red-500">*</span>
                                     </label>
                                     <textarea
                                         id="message"
                                         name="message"
                                         rows={6}
+                                        required
                                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="Your message..."
                                     />
+                                </div>
+                                <div className="flex items-start">
+                                    <input
+                                        type="checkbox"
+                                        id="email-consent"
+                                        name="email-consent"
+                                        required
+                                        className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                    <label htmlFor="email-consent" className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+                                        I agree to receive emails regarding my questions or reported issues from the Privymesh eam <span className="text-red-500">*</span>
+                                    </label>
                                 </div>
                                 <button
                                     type="submit"
                                     className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                                 >
                                     <MessageSquare className="w-5 h-5 mr-2" />
-                                    Send Message
+                                    Send Request
                                 </button>
                             </form>
                         </div>
@@ -197,7 +203,6 @@ export default function Contact() {
                                 <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                                     <li>• Project-related inquiries</li>
                                     <li>• Technical discussions</li>
-                                    <li>• Academic collaboration or evaluation</li>
                                     <li>• Constructive feedback</li>
                                 </ul>
                             </div>
