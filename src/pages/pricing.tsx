@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import AppLogoIcon from '@/components/app-logo-icon';
-import { ArrowLeft, Check, Zap, Shield, Globe } from 'lucide-react';
+import { ArrowLeft, Check, Zap, Shield, Globe, Users, Network, Lock } from 'lucide-react';
 
 export default function Pricing() {
     return (
@@ -30,157 +30,259 @@ export default function Pricing() {
             </nav>
 
             {/* Hero Section */}
-            <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-900/20">
+            <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-900/20">
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                        Pricing
+                        Simple, Transparent Pricing
                     </h1>
                     <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-                        This project is developed for academic and research purposes as part of a Final Year Project.
+                        Choose the plan that fits your needs. All plans include full access to PrivyMesh's quantum-resistant VPN features.
                     </p>
                 </div>
             </section>
 
-            {/* Pricing Information */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
-                <div className="max-w-4xl mx-auto">
-                    <div className="text-center mb-12">
-                        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
-                            <Check className="w-8 h-8 text-green-600 dark:text-green-400" />
+            {/* Pricing Cards */}
+            <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* Free Plan */}
+                        <div className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition-colors">
+                            <div className="mb-8">
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                                    Free
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-6">
+                                    For individuals or small teams looking for easy-to-use and secure connectivity.
+                                </p>
+                                <div className="mb-4">
+                                    <span className="text-5xl font-bold text-gray-900 dark:text-white">$0</span>
+                                    <span className="text-gray-600 dark:text-gray-400 text-lg"> / month</span>
+                                </div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                    <span className="font-semibold text-gray-900 dark:text-white">Up to 5 machines</span>
+                                </div>
+                                <Link
+                                    to="/register"
+                                    className="block w-full text-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-base font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                                >
+                                    Get Started
+                                </Link>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Peer-to-peer (P2P) encrypted connections</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">WireGuard-based secure tunnels</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Quantum-resistant key exchange concepts</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Zero-trust network access</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Centralized web dashboard</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Community support</span>
+                                </div>
+                            </div>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                            Free to Use
-                        </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                            No commercial pricing applied. This project is developed for academic and research purposes.
-                        </p>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                        <div className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-800">
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                                Educational License
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                PrivyMesh is intended for demonstration, learning, and evaluation purposes as part of 
-                                a Final Year Software Engineering Project.
-                            </p>
-                            <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                                <li className="flex items-start">
-                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                                    <span>Free for academic use</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                                    <span>Open for evaluation</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                                    <span>Research and learning purposes</span>
-                                </li>
-                            </ul>
+
+                        {/* Team Plan - Featured */}
+                        <div className="p-8 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 border-2 border-blue-500 transform scale-105 shadow-xl relative">
+                            <div className="absolute top-4 right-4">
+                                <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-white text-xs font-medium">
+                                    Popular
+                                </span>
+                            </div>
+                            <div className="mb-8">
+                                <h3 className="text-2xl font-bold text-white mb-2">
+                                    Team
+                                </h3>
+                                <p className="text-blue-100 text-sm mb-6">
+                                    For teams replacing legacy VPNs with secure remote access and site-to-site connectivity.
+                                </p>
+                                <div className="mb-4">
+                                    <span className="text-5xl font-bold text-white">$6</span>
+                                    <span className="text-blue-100 text-lg"> / machine / month</span>
+                                </div>
+                                <div className="text-sm text-blue-100 mb-6">
+                                    <span className="font-semibold text-white">Up to 20 machines</span>
+                                </div>
+                                <Link
+                                    to="/register"
+                                    className="block w-full text-center px-6 py-3 border-2 border-white text-base font-medium rounded-lg text-blue-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors"
+                                >
+                                    Try for Free
+                                </Link>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-white mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-white text-sm">Everything in Free, plus:</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-white mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-white text-sm">Advanced network routing</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-white mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-white text-sm">Private DNS support</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-white mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-white text-sm">Device-based access control</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-white mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-white text-sm">Improved scalability for team environments</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-white mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-white text-sm">Email-based support</span>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <div className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-800">
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                                No Hidden Costs
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                There are no subscription requirements or hidden costs for the current version of PrivyMesh.
-                            </p>
-                            <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                                <li className="flex items-start">
+
+                        {/* Business Plan */}
+                        <div className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition-colors">
+                            <div className="mb-8">
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                                    Business
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-6">
+                                    For organizations adopting a modern Zero Trust networking approach.
+                                </p>
+                                <div className="mb-4">
+                                    <span className="text-5xl font-bold text-gray-900 dark:text-white">$12</span>
+                                    <span className="text-gray-600 dark:text-gray-400 text-lg"> / machine / month</span>
+                                </div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                    <span className="font-semibold text-gray-900 dark:text-white">Up to 50 machines</span>
+                                </div>
+                                <Link
+                                    to="/register"
+                                    className="block w-full text-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-base font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                                >
+                                    Try for Free
+                                </Link>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex items-start">
                                     <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                                    <span>No subscription fees</span>
-                                </li>
-                                <li className="flex items-start">
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Everything in Team, plus:</span>
+                                </div>
+                                <div className="flex items-start">
                                     <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                                    <span>No credit card required</span>
-                                </li>
-                                <li className="flex items-start">
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Enhanced device verification</span>
+                                </div>
+                                <div className="flex items-start">
                                     <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                                    <span>Full feature access</span>
-                                </li>
-                            </ul>
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Policy-based network segmentation</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Traffic visibility (basic, non-logging)</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">High availability control plane</span>
+                                </div>
+                                <div className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                                    <span className="text-gray-600 dark:text-gray-300 text-sm">Priority support</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div className="p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-200 dark:border-blue-800">
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                            Future Scope
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-300">
-                            Pricing models may be explored in future iterations as part of extended research or 
-                            commercialization efforts. For now, PrivyMesh remains completely free for all users.
-                        </p>
                     </div>
                 </div>
             </section>
 
-            {/* Features Included */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
+            {/* Additional Info Section */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                            All Features Included
+                            All Plans Include
                         </h2>
                         <p className="text-lg text-gray-600 dark:text-gray-300">
-                            Every user gets access to all features at no cost
+                            Core features available across all pricing tiers
                         </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="text-center">
+                        <div className="text-center p-6 rounded-xl bg-white dark:bg-gray-900">
                             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-4">
                                 <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                 Quantum-Resistant Security
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                Enhanced key exchange mechanisms for future-proof security
+                            <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                Enhanced key exchange mechanisms designed for future-proof security
                             </p>
                         </div>
-                        <div className="text-center">
+                        <div className="text-center p-6 rounded-xl bg-white dark:bg-gray-900">
                             <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-4">
                                 <Zap className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                 High Performance
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                WireGuard-based peer-to-peer connectivity for optimal speed
+                            <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                WireGuard-based peer-to-peer connectivity for low latency and high throughput
                             </p>
                         </div>
-                        <div className="text-center">
+                        <div className="text-center p-6 rounded-xl bg-white dark:bg-gray-900">
                             <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-4">
                                 <Globe className="w-6 h-6 text-green-600 dark:text-green-400" />
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                 Cross-Platform Support
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                Unified client architecture for multiple operating systems
+                            <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                Unified client architecture compatible with multiple operating systems
                             </p>
                         </div>
                     </div>
                 </div>
             </section>
 
+            {/* Academic Project Note */}
+            <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+                <div className="max-w-4xl mx-auto text-center">
+                    <div className="p-6 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                            <strong className="text-gray-900 dark:text-white">Note:</strong> PrivyMesh is developed as a Final Year Software Engineering Project 
+                            for academic and research purposes. Pricing shown is for demonstration purposes and reflects 
+                            potential future commercialization models.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
             {/* CTA Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
                         Ready to get started?
                     </h2>
                     <p className="text-xl text-blue-100 mb-8">
-                        Start using PrivyMesh today. Completely free for academic and research purposes.
+                        Start using PrivyMesh today. Try any plan free to explore all features.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
                             to="/register"
                             className="inline-flex items-center px-8 py-4 border-2 border-white text-lg font-medium rounded-xl text-blue-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-all transform hover:scale-105"
                         >
-                            Get Started Free
+                            Get Started
                         </Link>
                         <Link
                             to="/docs"
