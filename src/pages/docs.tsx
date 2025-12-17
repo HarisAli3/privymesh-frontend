@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import AppLogoIcon from '@/components/app-logo-icon';
-import { Book, FileText, Code, Settings, Shield, Zap, Search } from 'lucide-react';
+import { Book, FileText, Code, Settings, Shield, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Docs() {
@@ -79,18 +79,6 @@ export default function Docs() {
                     <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
                         Detailed technical and user guidance for the VPN system
                     </p>
-                    
-                    {/* Search Bar */}
-                    <div className="max-w-2xl mx-auto">
-                        <div className="relative">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Search documentation..."
-                                className="w-full pl-12 pr-4 py-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            />
-                        </div>
-                    </div>
                 </div>
             </section>
 
