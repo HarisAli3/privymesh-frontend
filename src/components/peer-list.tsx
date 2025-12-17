@@ -14,7 +14,6 @@ import {
     Shield,
     Activity,
     Eye,
-    Settings,
     Trash2,
     Edit,
     Check,
@@ -469,13 +468,9 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end" className="w-48">
-                                                <DropdownMenuItem onClick={() => handlePeerAction(peer.id, 'view')}>
+                                                <DropdownMenuItem onClick={() => navigate(`/peers/${peer.id}`)}>
                                                     <Icon iconNode={Eye} className="h-4 w-4 mr-2" />
                                                     View Details
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handlePeerAction(peer.id, 'settings')}>
-                                                    <Icon iconNode={Settings} className="h-4 w-4 mr-2" />
-                                                    Settings
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleStartEdit(peer, 'name')}>
                                                     <Icon iconNode={Edit} className="h-4 w-4 mr-2" />
