@@ -48,9 +48,16 @@ export default function AuthCallback() {
         const code = urlParams.get('code');
         const state = urlParams.get('state');
         
+        console.log('[AuthCallback] Processing callback with params:', { 
+          hasError: !!error, 
+          hasCode: !!code, 
+          hasState: !!state,
+          stateLength: state?.length 
+        });
+        
         if (error) {
           console.error('OAuth error from Zitadel:', error, errorDescription);
-          // Clear state and redirect to login
+          // Clear state and redirect to landing page to break loop
           try {
             const zitadelAuth = (await import('@/lib/zitadel-auth')).default;
             zitadelAuth.clearAllAuthState();
@@ -59,22 +66,50 @@ export default function AuthCallback() {
           }
           setError(`Authentication failed: ${errorDescription || error}`);
           setTimeout(() => {
-            window.location.replace('/login');
+            window.location.replace('/?cleared=1');
           }, 2000);
           return;
         }
         
-        // If we have code but no state, or state looks invalid, clear state first
-        // This can happen after account deletion where stale state exists
-        if (code && (!state || state.length < 10)) {
-          console.warn('[AuthCallback] Suspicious OAuth state - clearing before processing');
+        // If we don't have both code and state, this is not a valid OAuth callback
+        // This can happen if user navigates directly to /pm-auth or after state clearing
+        if (!code || !state) {
+          console.warn('[AuthCallback] Missing OAuth parameters (code or state) - not a valid callback');
+          console.warn('[AuthCallback] This might indicate stale state or direct navigation to callback URL');
+          
+          // Clear all state and redirect to landing page
           try {
             const zitadelAuth = (await import('@/lib/zitadel-auth')).default;
             zitadelAuth.clearAllAuthState();
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 300));
           } catch (clearError) {
             console.warn('Failed to clear state:', clearError);
           }
+          
+          setError('Invalid authentication request. Please try logging in again.');
+          setTimeout(() => {
+            window.location.replace('/?cleared=1');
+          }, 2000);
+          return;
+        }
+        
+        // If state looks invalid (too short), clear state first
+        // This can happen after account deletion where stale state exists
+        if (state.length < 10) {
+          console.warn('[AuthCallback] Suspicious OAuth state (too short) - clearing before processing');
+          try {
+            const zitadelAuth = (await import('@/lib/zitadel-auth')).default;
+            zitadelAuth.clearAllAuthState();
+            await new Promise(resolve => setTimeout(resolve, 300));
+          } catch (clearError) {
+            console.warn('Failed to clear state:', clearError);
+          }
+          
+          setError('Authentication state invalid. Please try logging in again.');
+          setTimeout(() => {
+            window.location.replace('/?cleared=1');
+          }, 2000);
+          return;
         }
         
         await handleCallback();
@@ -126,9 +161,25 @@ export default function AuthCallback() {
   // Separate effect to handle navigation after state is ready
   useEffect(() => {
     if (hasProcessedCallback.current && !isLoading && isAuthenticated && !error) {
+      console.log('[AuthCallback] Authentication successful, redirecting to dashboard');
       navigate('/dashboard', { replace: true });
     }
   }, [isLoading, isAuthenticated, navigate, error]);
+  
+  // Prevent infinite loops: if we're on the callback page but already authenticated
+  // and there's no code/state in URL, redirect immediately
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
+    const error = urlParams.get('error');
+    
+    // If we're authenticated but there's no valid callback params, we might be in a loop
+    if (isAuthenticated && !code && !state && !error && !isLoading) {
+      console.log('[AuthCallback] Already authenticated with no callback params - redirecting to dashboard');
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
