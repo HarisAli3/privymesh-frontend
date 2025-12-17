@@ -266,27 +266,23 @@ export default function Landing() {
                         <div>
                             <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-4">Product</h3>
                             <ul className="space-y-3">
-                                <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Features</a></li>
-                                <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Pricing</a></li>
-                                <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Documentation</a></li>
-                                <li><a href="#" className="text-gray-300 hover:text-white transition-colors">API</a></li>
+                                <li><Link to="/pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</Link></li>
+                                <li><Link to="/docs" className="text-gray-300 hover:text-white transition-colors">Documentation</Link></li>
                             </ul>
                         </div>
                         
                         <div>
                             <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-4">Company</h3>
                             <ul className="space-y-3">
-                                <li><a href="#" className="text-gray-300 hover:text-white transition-colors">About</a></li>
-                                <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Blog</a></li>
-                                <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Careers</a></li>
-                                <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+                                <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors">About</Link></li>
+                                <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</Link></li>
                             </ul>
                         </div>
                     </div>
                     
                     <div className="mt-8 pt-8 border-t border-gray-800">
                         <p className="text-gray-400 text-sm text-center">
-                            © 2024 PrivyMesh. All rights reserved.
+                            © 2025 PrivyMesh. All rights reserved.
                         </p>
                     </div>
                 </div>
