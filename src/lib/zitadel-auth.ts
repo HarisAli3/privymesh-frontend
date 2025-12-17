@@ -172,17 +172,13 @@ class ZitadelAuthService {
             ...Object.keys(sessionStorage)
           ];
           
-          // Only clear state keys that are definitely stale (have timestamps or are very old)
+          // Check for state keys - we won't clear them, authorize() will overwrite them
           // Don't clear recent state as it might be from a current login attempt
-          let clearedOldStateKeys = 0;
           allStorageKeys.forEach(key => {
-            // Only clear if it's a state key AND we're sure it's old
+            // Only log if it's a state key - we'll let authorize() overwrite it
             // Be conservative - only clear if we're certain it's stale
             if (key.startsWith(stateStorePrefix) && key.includes('state')) {
-              // Check if this is a very old state (more than 10 minutes)
-              // We can't easily check timestamp, so we'll be conservative
-              // Only clear if we're starting a fresh login (which we are)
-              // The authorize() call will create new state anyway
+              // The authorize() call will create new state and overwrite this
               console.log('[ZitadelAuth] Will let authorize() overwrite state key:', key);
             }
           });
