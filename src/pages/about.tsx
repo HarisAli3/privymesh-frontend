@@ -79,19 +79,19 @@ export default function About() {
                     <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
                         PrivyMesh is a modern, quantum-resistant, peer-to-peer VPN platform built for secure, high-performance private networking.
                     </p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                        PrivyMesh enables organizations to connect users, devices, and infrastructure through encrypted peer-to-peer tunnels while maintaining centralized visibility and control. By eliminating unnecessary intermediaries and embracing next-generation cryptography, PrivyMesh delivers secure connectivity that is fast, resilient, and future-ready.
+                    </p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                        Our platform is designed for teams and organizations that require strong security guarantees, low-latency communication, and simplified network management across distributed environments.
+                    </p>
                 </div>
             </section>
 
             {/* What We Do Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
                 <div className="max-w-4xl mx-auto">
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                        PrivyMesh enables organizations to connect users, devices, and infrastructure through encrypted peer-to-peer tunnels while maintaining centralized visibility and control. By eliminating unnecessary intermediaries and embracing next-generation cryptography, PrivyMesh delivers secure connectivity that is fast, resilient, and future-ready.
-                    </p>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                        Our platform is designed for teams and organizations that require strong security guarantees, low-latency communication, and simplified network management across distributed environments.
-                    </p>
-                    <div className="text-center mb-12 mt-12">
+                    <div className="text-center mb-12">
                         <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
                             <Target className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                         </div>
