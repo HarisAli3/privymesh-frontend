@@ -112,19 +112,25 @@ export default function AuthCallback() {
           return;
         }
         
+        console.log('[AuthCallback] Calling handleCallback to process OAuth response');
         await handleCallback();
+        console.log('[AuthCallback] handleCallback completed successfully');
       } catch (err) {
-        console.error('Authentication callback failed:', err);
+        console.error('[AuthCallback] Authentication callback failed:', err);
         const errorMessage = err instanceof Error ? err.message : String(err);
+        const errorString = String(err);
         
         // Check if it's a state mismatch error (stale OAuth state)
         const isStateError = errorMessage.includes('state') || 
                             errorMessage.includes('State') ||
                             errorMessage.includes('mismatch') ||
-                            errorMessage.includes('Invalid state');
+                            errorMessage.includes('Invalid state') ||
+                            errorString.includes('No matching state') ||
+                            errorString.includes('matching state');
         
         if (isStateError) {
-          console.log('[AuthCallback] Detected state mismatch - clearing all OAuth state');
+          console.log('[AuthCallback] Detected state mismatch error - this means state was cleared before callback could match');
+          console.log('[AuthCallback] State mismatch usually happens when state is cleared too aggressively');
         }
         
         setError('Authentication failed. Please try again.');
@@ -140,17 +146,16 @@ export default function AuthCallback() {
             await new Promise(resolve => setTimeout(resolve, 500));
           }
         } catch (clearError) {
-          console.warn('Failed to clear auth state on callback error:', clearError);
+          console.warn('[AuthCallback] Failed to clear auth state on callback error:', clearError);
         }
         
-        // For state errors, redirect to landing page instead of login to break the loop
-        // This gives the user a fresh start
-        const redirectUrl = isStateError ? '/?cleared=1' : '/login';
-        
+        // ALWAYS redirect to landing page for errors to break the loop
+        // Never redirect back to /login as that can cause loops
+        console.log('[AuthCallback] Redirecting to landing page to break potential loop');
         setTimeout(() => {
           // Use window.location.replace to force full page reload and prevent back navigation
           // This ensures all state is cleared and user starts fresh
-          window.location.replace(redirectUrl);
+          window.location.replace('/?cleared=1');
         }, isStateError ? 1500 : 2000);
       }
     };
@@ -174,10 +179,36 @@ export default function AuthCallback() {
     const state = urlParams.get('state');
     const error = urlParams.get('error');
     
-    // If we're authenticated but there's no valid callback params, we might be in a loop
-    if (isAuthenticated && !code && !state && !error && !isLoading) {
-      console.log('[AuthCallback] Already authenticated with no callback params - redirecting to dashboard');
-      navigate('/dashboard', { replace: true });
+    // If we're on /pm-auth without valid params, we might be in a redirect loop
+    // This can happen if the callback failed and redirected back
+    if (!code && !state && !error && !isLoading) {
+      // If we've already processed a callback (success or failure), don't process again
+      if (hasProcessedCallback.current) {
+        console.log('[AuthCallback] Already processed callback, preventing re-processing');
+        return;
+      }
+      
+      // If we're authenticated but no params, redirect to dashboard
+      if (isAuthenticated) {
+        console.log('[AuthCallback] Already authenticated with no callback params - redirecting to dashboard');
+        navigate('/dashboard', { replace: true });
+        return;
+      }
+      
+      // If we're not authenticated and no params, this is an invalid state
+      // Clear state and redirect to landing page to break any loop
+      console.warn('[AuthCallback] No callback params and not authenticated - clearing state and redirecting');
+      (async () => {
+        try {
+          const zitadelAuth = (await import('@/lib/zitadel-auth')).default;
+          zitadelAuth.clearAllAuthState();
+          await new Promise(resolve => setTimeout(resolve, 300));
+          window.location.replace('/?cleared=1');
+        } catch (clearError) {
+          console.warn('[AuthCallback] Failed to clear state:', clearError);
+          window.location.replace('/?cleared=1');
+        }
+      })();
     }
   }, [isAuthenticated, isLoading, navigate]);
 

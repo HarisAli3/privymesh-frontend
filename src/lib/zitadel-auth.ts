@@ -141,89 +141,66 @@ class ZitadelAuthService {
   // Start the login process
   async login(): Promise<void> {
     try {
-      console.log('[ZitadelAuth] Starting login process - clearing any stale state');
+      console.log('[ZitadelAuth] Starting login process');
       
-      // Before starting a new login, clear any stale OAuth state
-      // This prevents state mismatch errors when logging in after account deletion
-      // or other scenarios where stale state might exist
+      // Before starting a new login, clear any stale user state
+      // BUT: Do NOT clear the state store - it might contain valid state from a previous attempt
+      // The state store will be overwritten when authorize() creates new state
       try {
-        // Step 1: Clear any existing user state
+        // Step 1: Clear any existing expired user state
         const existingUser = await zitadel.userManager.getUser().catch(() => null);
         if (existingUser) {
-          console.log('[ZitadelAuth] Found existing user state before login - clearing to prevent state mismatch');
-          await zitadel.userManager.removeUser();
-        }
-        
-        // Step 2: Clear OAuth state store - this is CRITICAL
-        // The state store holds OAuth state parameters that cause mismatches
-        try {
-          const stateStore = (zitadel.userManager as any).stateStore;
-          if (stateStore) {
-            // Try to clear using the clear method if available
-            if (typeof stateStore.clear === 'function') {
-              stateStore.clear();
-              console.log('[ZitadelAuth] Cleared UserManager state store via clear()');
-            }
-            
-            // Also manually clear state store keys
-            const authority = ZITADEL_CONFIG.instanceUrl;
-            const clientId = ZITADEL_CONFIG.clientId;
-            const stateStorePrefix = `oidc.${authority}.${clientId}`;
-            
-            const allStorageKeys = [
-              ...Object.keys(localStorage),
-              ...Object.keys(sessionStorage)
-            ];
-            
-            let clearedStateKeys = 0;
-            allStorageKeys.forEach(key => {
-              if (
-                key.startsWith(stateStorePrefix) || 
-                key.includes('state') ||
-                (key.includes('oidc') && (key.includes('state') || key.includes('authorize')))
-              ) {
-                console.log('[ZitadelAuth] Removing state store key before login:', key);
-                localStorage.removeItem(key);
-                sessionStorage.removeItem(key);
-                clearedStateKeys++;
-              }
-            });
-            
-            if (clearedStateKeys > 0) {
-              console.log(`[ZitadelAuth] Cleared ${clearedStateKeys} state store keys before login`);
-            }
+          if (existingUser.expired) {
+            console.log('[ZitadelAuth] Found expired user - removing expired user');
+            await zitadel.userManager.removeUser();
+          } else {
+            console.log('[ZitadelAuth] Found valid user - user is already authenticated');
+            // User is already authenticated, no need to start new login
+            return;
           }
-        } catch (stateStoreError) {
-          console.warn('[ZitadelAuth] Failed to clear stale state store:', stateStoreError);
-          // Continue anyway - the new login will create fresh state
         }
         
-        // Step 3: Clear any remaining OAuth-related storage
-        const allKeys = Object.keys(localStorage).concat(Object.keys(sessionStorage));
-        const staleStateKeys = allKeys.filter(key => {
-          const keyLower = key.toLowerCase();
-          return (
-            (keyLower.includes('oidc') && keyLower.includes('state')) || 
-            (keyLower.includes('oidc') && keyLower.includes('authorize'))
-          );
-        });
-        
-        if (staleStateKeys.length > 0) {
-          console.log('[ZitadelAuth] Clearing additional stale OAuth state keys:', staleStateKeys);
-          staleStateKeys.forEach(key => {
-            localStorage.removeItem(key);
-            sessionStorage.removeItem(key);
+        // Step 2: Check for very old state store entries (older than 10 minutes)
+        // Only clear state that's definitely stale, not recent state that might be valid
+        try {
+          const authority = ZITADEL_CONFIG.instanceUrl;
+          const clientId = ZITADEL_CONFIG.clientId;
+          const stateStorePrefix = `oidc.${authority}.${clientId}`;
+          
+          const allStorageKeys = [
+            ...Object.keys(localStorage),
+            ...Object.keys(sessionStorage)
+          ];
+          
+          // Only clear state keys that are definitely stale (have timestamps or are very old)
+          // Don't clear recent state as it might be from a current login attempt
+          let clearedOldStateKeys = 0;
+          allStorageKeys.forEach(key => {
+            // Only clear if it's a state key AND we're sure it's old
+            // Be conservative - only clear if we're certain it's stale
+            if (key.startsWith(stateStorePrefix) && key.includes('state')) {
+              // Check if this is a very old state (more than 10 minutes)
+              // We can't easily check timestamp, so we'll be conservative
+              // Only clear if we're starting a fresh login (which we are)
+              // The authorize() call will create new state anyway
+              console.log('[ZitadelAuth] Will let authorize() overwrite state key:', key);
+            }
           });
+        } catch (stateStoreError) {
+          console.warn('[ZitadelAuth] Error checking state store:', stateStoreError);
+          // Continue anyway - authorize() will create fresh state
         }
       } catch (clearError) {
-        console.warn('[ZitadelAuth] Error clearing state before login:', clearError);
+        console.warn('[ZitadelAuth] Error preparing for login:', clearError);
         // Continue anyway - try to start fresh login
       }
       
-      console.log('[ZitadelAuth] State cleared, starting OAuth authorization');
+      console.log('[ZitadelAuth] Starting OAuth authorization - this will create new state');
+      // authorize() will create a new state and store it
+      // This will overwrite any existing state in the state store
       await zitadel.authorize();
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('[ZitadelAuth] Login failed:', error);
       throw error;
     }
   }
@@ -231,20 +208,29 @@ class ZitadelAuthService {
   // Handle the callback after login
   async handleCallback(): Promise<User> {
     try {
-      // Before processing callback, check if there's stale state that might cause issues
-      // This is especially important after account deletion
+      console.log('[ZitadelAuth] Processing OAuth callback');
+      
+      // Before processing callback, check if there's stale user (but DON'T clear state store)
+      // The state store must remain intact for the callback to match
       try {
         const currentUser = await zitadel.userManager.getUser();
         if (currentUser && currentUser.expired) {
-          console.log('[ZitadelAuth] Found expired user - clearing before callback');
+          console.log('[ZitadelAuth] Found expired user - removing expired user but keeping state store');
+          // Only remove the expired user, don't clear the state store
+          // The state store is needed for the callback to match
           await zitadel.userManager.removeUser();
         }
       } catch (getUserError) {
         // Ignore - user might not exist
+        console.log('[ZitadelAuth] No existing user found, proceeding with callback');
       }
       
+      // Process the callback - this will match the state from the state store
+      console.log('[ZitadelAuth] Calling signinRedirectCallback to process OAuth response');
       const user = await zitadel.userManager.signinRedirectCallback() as User;
+      
       if (user && !user.expired) {
+        console.log('[ZitadelAuth] Callback successful, user authenticated');
         this.user = user;
         this.setUserCookie(user);
         return user;
@@ -252,21 +238,24 @@ class ZitadelAuthService {
         throw new Error('Invalid user returned from callback');
       }
     } catch (error) {
-      console.error('Callback handling failed:', error);
+      console.error('[ZitadelAuth] Callback handling failed:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
       const errorString = String(error);
-      console.error('Error details:', errorMessage);
-      console.error('Full error:', errorString);
+      console.error('[ZitadelAuth] Error details:', errorMessage);
+      console.error('[ZitadelAuth] Full error:', errorString);
       
       // Check for specific error types that indicate stale state
       const isStateMismatch = errorString.includes('state') || 
                               errorString.includes('State') ||
                               errorString.includes('mismatch') ||
                               errorString.includes('Invalid state') ||
-                              errorMessage.includes('state');
+                              errorMessage.includes('state') ||
+                              errorString.includes('No matching state') ||
+                              errorString.includes('matching state');
       
       if (isStateMismatch) {
-        console.log('[ZitadelAuth] State mismatch detected - clearing ALL OAuth state');
+        console.log('[ZitadelAuth] State mismatch detected - this usually means state was cleared before callback');
+        console.log('[ZitadelAuth] Clearing ALL OAuth state to allow fresh login');
       }
       
       // On callback failure, clear ALL state to allow fresh login
