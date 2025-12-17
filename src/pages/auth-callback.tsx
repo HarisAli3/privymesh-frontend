@@ -85,7 +85,8 @@ export default function AuthCallback() {
         // Check if it's a state mismatch error (stale OAuth state)
         const isStateError = errorMessage.includes('state') || 
                             errorMessage.includes('State') ||
-                            errorMessage.includes('mismatch');
+                            errorMessage.includes('mismatch') ||
+                            errorMessage.includes('Invalid state');
         
         if (isStateError) {
           console.log('[AuthCallback] Detected state mismatch - clearing all OAuth state');
@@ -101,17 +102,21 @@ export default function AuthCallback() {
           
           // If it's a state error, wait a bit longer to ensure storage is cleared
           if (isStateError) {
-            await new Promise(resolve => setTimeout(resolve, 300));
+            await new Promise(resolve => setTimeout(resolve, 500));
           }
         } catch (clearError) {
           console.warn('Failed to clear auth state on callback error:', clearError);
         }
         
+        // For state errors, redirect to landing page instead of login to break the loop
+        // This gives the user a fresh start
+        const redirectUrl = isStateError ? '/?cleared=1' : '/login';
+        
         setTimeout(() => {
           // Use window.location.replace to force full page reload and prevent back navigation
           // This ensures all state is cleared and user starts fresh
-          window.location.replace('/login');
-        }, isStateError ? 1000 : 2000);
+          window.location.replace(redirectUrl);
+        }, isStateError ? 1500 : 2000);
       }
     };
 

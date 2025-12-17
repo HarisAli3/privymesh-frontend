@@ -1,9 +1,37 @@
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { ArrowRight, CheckCircle, Shield, Zap, Globe, Users, Lock, Star } from 'lucide-react';
 import PublicHeader from '@/components/public-header';
 
 export default function Landing() {
+    // Handle account deletion scenario and state clearing - clear any remaining auth state
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const fromDeletion = urlParams.get('deleted') === '1';
+        const fromCleared = urlParams.get('cleared') === '1';
+        
+        if (fromDeletion || fromCleared) {
+            console.log('[Landing] Detected auth state cleanup needed - clearing any remaining auth state');
+            (async () => {
+                try {
+                    const zitadelAuth = (await import('@/lib/zitadel-auth')).default;
+                    // Clear all auth state to ensure clean slate for new login
+                    zitadelAuth.clearAllAuthState();
+                    
+                    // Remove the cleanup parameters from URL
+                    urlParams.delete('deleted');
+                    urlParams.delete('cleared');
+                    urlParams.delete('t'); // Also remove timestamp
+                    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                    window.history.replaceState({}, '', newUrl);
+                } catch (clearError) {
+                    console.warn('[Landing] Failed to clear auth state:', clearError);
+                }
+            })();
+        }
+    }, []);
+
     return (
         <>
             <PublicHeader />

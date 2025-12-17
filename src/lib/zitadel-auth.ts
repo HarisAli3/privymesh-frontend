@@ -141,6 +141,50 @@ class ZitadelAuthService {
   // Start the login process
   async login(): Promise<void> {
     try {
+      // Before starting a new login, clear any stale OAuth state
+      // This prevents state mismatch errors when logging in after account deletion
+      // or other scenarios where stale state might exist
+      try {
+        // Check if there's any existing user state that might be stale
+        const existingUser = await zitadel.userManager.getUser().catch(() => null);
+        if (existingUser) {
+          console.log('[ZitadelAuth] Found existing user state before login - clearing to prevent state mismatch');
+          // Clear user but keep the state store intact for the new login flow
+          await zitadel.userManager.removeUser();
+        }
+        
+        // Also clear any stale state from the state store that might be from a previous failed attempt
+        // This is especially important after account deletion
+        try {
+          const stateStore = (zitadel.userManager as any).stateStore;
+          if (stateStore) {
+            // Get all keys from the state store
+            const allKeys = Object.keys(localStorage).concat(Object.keys(sessionStorage));
+            const staleStateKeys = allKeys.filter(key => {
+              const keyLower = key.toLowerCase();
+              return (
+                keyLower.includes('oidc') && 
+                (keyLower.includes('state') || keyLower.includes('authorize'))
+              );
+            });
+            
+            if (staleStateKeys.length > 0) {
+              console.log('[ZitadelAuth] Clearing stale OAuth state keys before login:', staleStateKeys);
+              staleStateKeys.forEach(key => {
+                localStorage.removeItem(key);
+                sessionStorage.removeItem(key);
+              });
+            }
+          }
+        } catch (stateStoreError) {
+          console.warn('[ZitadelAuth] Failed to clear stale state store:', stateStoreError);
+          // Continue anyway - the new login will create fresh state
+        }
+      } catch (clearError) {
+        console.warn('[ZitadelAuth] Error clearing state before login:', clearError);
+        // Continue anyway - try to start fresh login
+      }
+      
       await zitadel.authorize();
     } catch (error) {
       console.error('Login failed:', error);
