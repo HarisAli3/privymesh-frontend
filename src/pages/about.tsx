@@ -77,48 +77,44 @@ export default function About() {
                         About PrivyMesh
                     </h1>
                     <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-                        A quantum-resistant, peer-to-peer VPN system designed for the future of secure networking.
+                        PrivyMesh is a modern, quantum-resistant, peer-to-peer VPN platform built for secure, high-performance private networking.
                     </p>
                 </div>
             </section>
 
-            {/* Project Overview Section */}
+            {/* What We Do Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
                 <div className="max-w-4xl mx-auto">
-                    <div className="text-center mb-12">
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                        PrivyMesh enables organizations to connect users, devices, and infrastructure through encrypted peer-to-peer tunnels while maintaining centralized visibility and control. By eliminating unnecessary intermediaries and embracing next-generation cryptography, PrivyMesh delivers secure connectivity that is fast, resilient, and future-ready.
+                    </p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                        Our platform is designed for teams and organizations that require strong security guarantees, low-latency communication, and simplified network management across distributed environments.
+                    </p>
+                    <div className="text-center mb-12 mt-12">
                         <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
                             <Target className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                            Project Overview
+                            What We Do
                         </h2>
                     </div>
                     <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                        PrivyMesh is a Final Year Software Engineering Project focused on building a quantum-resistant, 
-                        peer-to-peer VPN system inspired by modern solutions such as NetBird and Tailscale.
-                    </p>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                        Our VPN is designed with modern security and performance in mind, combining peer-to-peer networking 
-                        with next-generation cryptography. The goal of this project is to explore secure decentralized 
-                        networking, post-quantum cryptography concepts, and real-world VPN architecture and implementation.
+                        PrivyMesh provides a secure networking layer that allows trusted devices to communicate directly over encrypted channels. The system combines decentralized connectivity with centralized policy management, ensuring security without sacrificing performance or operational simplicity.
                     </p>
                     <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                        By combining academic research with practical development, this project demonstrates how 
-                        next-generation secure communication systems can be designed for future-ready networks.
+                        By adopting a zero-trust model and forward-looking cryptographic design, PrivyMesh helps organizations protect sensitive data, reduce attack surfaces, and prepare for emerging security challenges.
                     </p>
                 </div>
             </section>
 
-            {/* Features Section */}
+            {/* Key Capabilities Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                            Key Features
+                            Key Capabilities
                         </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                            Our VPN is designed with modern security and performance in mind, combining peer-to-peer networking with next-generation cryptography.
-                        </p>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -127,11 +123,10 @@ export default function About() {
                                 <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Peer-to-Peer Secure Connectivity
+                                Secure Peer-to-Peer Networking
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Direct device-to-device tunnels using WireGuard for low latency and high throughput. 
-                                Experience fast, stable, and encrypted communication between your devices.
+                                PrivyMesh establishes direct encrypted tunnels between devices, reducing latency and improving performance compared to traditional hub-based VPN architectures.
                             </p>
                         </div>
                         
@@ -140,11 +135,10 @@ export default function About() {
                                 <Shield className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Quantum-Resistant Security
+                                Quantum-Resistant Cryptography
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Enhanced key exchange mechanisms designed to mitigate future quantum computing threats. 
-                                Built for the security challenges of tomorrow, today.
+                                Designed with long-term security in mind, PrivyMesh integrates advanced key exchange mechanisms intended to withstand future quantum computing threats.
                             </p>
                         </div>
                         
@@ -153,11 +147,10 @@ export default function About() {
                                 <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Zero-Trust Networking
+                                Zero-Trust Access Model
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Devices authenticate securely before joining the private network. Every connection is 
-                                verified and encrypted, ensuring maximum security.
+                                Every device must authenticate before joining the network. Access is continuously verified, ensuring that trust is explicit, enforced, and auditable.
                             </p>
                         </div>
                         
@@ -166,11 +159,10 @@ export default function About() {
                                 <Users className="w-6 h-6 text-orange-600 dark:text-orange-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Cross-Platform Support
+                                Cross-Platform Connectivity
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Compatible with multiple operating systems through a unified client architecture. 
-                                Connect devices regardless of their platform.
+                                A unified client architecture supports secure connections across multiple operating systems, enabling seamless communication across diverse environments.
                             </p>
                         </div>
                         
@@ -179,11 +171,10 @@ export default function About() {
                                 <Target className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Centralized Management
+                                Centralized Control & Visibility
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Manage devices and network access via an intuitive web dashboard. Control your entire 
-                                network from a single, easy-to-use interface.
+                                Administrators manage devices, access policies, and network configurations through a centralized web dashboard, maintaining full oversight without compromising decentralization.
                             </p>
                         </div>
                         
@@ -192,142 +183,135 @@ export default function About() {
                                 <Award className="w-6 h-6 text-red-600 dark:text-red-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                High Performance & Reliability
+                                Performance & Reliability
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300 mb-4">
-                                Optimized for fast, stable, and encrypted communication. Built with performance in mind 
-                                to ensure your network runs smoothly.
+                                Optimized for encrypted, real-time communication, PrivyMesh delivers stable and scalable connectivity for modern distributed teams.
                             </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Values Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                            Our Values
-                        </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                            The principles that guide everything we do
-                        </p>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="p-8 rounded-2xl bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow">
-                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-6">
-                                <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                            </div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Security First
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                We prioritize security in every decision we make, ensuring your network is protected by 
-                                industry-leading standards.
-                            </p>
-                        </div>
-                        
-                        <div className="p-8 rounded-2xl bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow">
-                            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-6">
-                                <Users className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                            </div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                User-Centric
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                Every feature is designed with our users in mind, focusing on simplicity and intuitive 
-                                experiences.
-                            </p>
-                        </div>
-                        
-                        <div className="p-8 rounded-2xl bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow">
-                            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-6">
-                                <Award className="w-6 h-6 text-green-600 dark:text-green-400" />
-                            </div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Excellence
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                We strive for excellence in everything we do, from code quality to customer support.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Research Focus Section */}
+            {/* Our Principles Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                            Research & Development Focus
+                            Our Principles
                         </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                            Exploring the future of secure networking through academic research and practical implementation
-                        </p>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="text-center p-8 rounded-2xl bg-gray-50 dark:bg-gray-800">
-                            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
-                                <Shield className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-shadow">
+                            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-6">
+                                <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Secure Decentralized Networking
+                                Security by Design
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300">
-                                Researching peer-to-peer architectures that eliminate single points of failure while 
-                                maintaining security and performance.
+                                Security is embedded into every layer of PrivyMesh, from cryptographic protocols to network architecture.
                             </p>
                         </div>
-                        <div className="text-center p-8 rounded-2xl bg-gray-50 dark:bg-gray-800">
-                            <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
-                                <Shield className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                        
+                        <div className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-shadow">
+                            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-6">
+                                <Users className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Post-Quantum Cryptography
+                                Simplicity at Scale
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300">
-                                Exploring quantum-resistant cryptographic algorithms to protect against future 
-                                quantum computing threats.
+                                Powerful networking capabilities are delivered through intuitive workflows, reducing operational complexity.
                             </p>
                         </div>
-                        <div className="text-center p-8 rounded-2xl bg-gray-50 dark:bg-gray-800">
-                            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
-                                <Target className="w-8 h-8 text-green-600 dark:text-green-400" />
+                        
+                        <div className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-shadow">
+                            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-6">
+                                <Award className="w-6 h-6 text-green-600 dark:text-green-400" />
                             </div>
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                Real-World VPN Architecture
+                                Reliability & Quality
                             </h3>
                             <p className="text-gray-600 dark:text-gray-300">
-                                Implementing and evaluating VPN systems inspired by industry leaders like NetBird 
-                                and Tailscale.
+                                We focus on building robust, maintainable systems that organizations can depend on for critical connectivity.
+                            </p>
+                        </div>
+                        
+                        <div className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-shadow">
+                            <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center mb-6">
+                                <Target className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                Continuous Innovation
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-300">
+                                PrivyMesh evolves with the security landscape, adopting new techniques to address emerging threats.
                             </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Academic Project Section */}
+            {/* Technology Focus Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800">
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
-                        <Heart className="w-8 h-8 text-orange-600 dark:text-orange-400" />
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                            Technology Focus
+                        </h2>
                     </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="text-center p-8 rounded-2xl bg-white dark:bg-gray-900">
+                            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
+                                <Shield className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                Decentralized Secure Networking
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Building peer-to-peer architectures that reduce single points of failure while preserving centralized governance.
+                            </p>
+                        </div>
+                        <div className="text-center p-8 rounded-2xl bg-white dark:bg-gray-900">
+                            <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
+                                <Shield className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                Post-Quantum Readiness
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Preparing secure communication systems for the next generation of cryptographic challenges.
+                            </p>
+                        </div>
+                        <div className="text-center p-8 rounded-2xl bg-white dark:bg-gray-900">
+                            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-6">
+                                <Target className="w-8 h-8 text-green-600 dark:text-green-400" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                Modern VPN Infrastructure
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-300">
+                                Designing secure networking solutions that align with real-world operational and performance requirements.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Closing Section */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+                <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                        Academic Excellence
+                        Built for the Future of Secure Connectivity
                     </h2>
                     <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
-                        PrivyMesh is developed as a Final Year Software Engineering Project, combining rigorous 
-                        academic research with practical software development. This project demonstrates how 
-                        theoretical concepts in cryptography and network security can be applied to build real-world 
-                        solutions.
+                        PrivyMesh is designed for organizations that demand privacy, performance, and control over their networks. As security threats evolve, PrivyMesh remains focused on delivering a secure, scalable, and forward-looking networking platform.
                     </p>
                     <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                        We welcome feedback, collaboration, and evaluation from the academic and technical community 
-                        to help advance the field of secure networking.
+                        We welcome collaboration and feedback from security professionals, engineers, and organizations looking to advance secure networking.
                     </p>
                 </div>
             </section>
