@@ -23,9 +23,6 @@ export default function About() {
                         
                         <div className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-8">
-                                <a href="/#features" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">
-                                    Features
-                                </a>
                                 <Link to="/about" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors">
                                     About
                                 </Link>
