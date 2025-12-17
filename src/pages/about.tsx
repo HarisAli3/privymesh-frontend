@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import AppLogoIcon from '@/components/app-logo-icon';
-import { Users, Target, Award, Heart, Shield } from 'lucide-react';
+import { Users, Target, Award, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function About() {
