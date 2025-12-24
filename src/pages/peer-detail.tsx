@@ -24,6 +24,7 @@ import {
 // Extended interface to handle additional fields that might be in the API response
 interface ExtendedPeerResponse extends PeerResponse {
     endpoint?: string; // Public endpoint (may be STUN-discovered)
+    relay_endpoint?: string; // Relay fallback endpoint for hole punching
     public_ip?: string;
     region?: string;
     operating_system?: string;
@@ -236,6 +237,30 @@ export default function PeerDetail() {
                                             )}
                                         </div>
                                     </div>
+                                    
+                                    {peer.relay_endpoint && (
+                                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                                            <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                                                <Icon iconNode={Router} className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                                                Relay Fallback Endpoint
+                                            </span>
+                                            <div className="flex items-center gap-2 text-left sm:text-right">
+                                                <span className="text-sm text-gray-900 dark:text-white font-mono break-all">
+                                                    {peer.relay_endpoint}
+                                                </span>
+                                                <button
+                                                    onClick={() => handleCopy('relay_endpoint', peer.relay_endpoint || '')}
+                                                    className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                                    title="Copy relay endpoint"
+                                                >
+                                                    <Icon 
+                                                        iconNode={copied['relay_endpoint'] ? Check : Copy} 
+                                                        className={`h-3.5 w-3.5 ${copied['relay_endpoint'] ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`} 
+                                                    />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                     
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                         <span className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">

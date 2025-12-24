@@ -172,6 +172,7 @@ export interface PeerResponse {
   name: string;
   ip_address: string;
   endpoint?: string; // Public endpoint for peer (e.g., "203.0.113.10:51820") - may be STUN-discovered
+  relay_endpoint?: string; // Relay fallback endpoint for hole punching
   public_ip?: string; // Device's public IP address
   region?: string; // Device region/location
   operating_system?: string; // Device operating system
