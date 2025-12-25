@@ -3,7 +3,6 @@ import { type BreadcrumbItem } from '@/types';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Icon } from '@/components/icon';
 import { ArrowLeft, Check, Copy, Smartphone, Terminal } from 'lucide-react';
@@ -24,7 +23,7 @@ type OsTab = 'windows' | 'macos' | 'linux' | 'ios' | 'android';
 
 export default function AddPeer() {
     const [osTab, setOsTab] = useState<OsTab>('windows');
-    const [generatedKey, setGeneratedKey] = useState<string>('');
+    const generatedKey = ''; // Placeholder - setup key creation removed
     const [copied, setCopied] = useState<Record<string, boolean>>({});
 
     const handleCopy = async (id: string, text: string) => {
