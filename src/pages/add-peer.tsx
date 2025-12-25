@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Icon } from '@/components/icon';
-import { ArrowLeft, Check, Copy, Smartphone, Terminal, Shield, Info, AlertCircle, CheckCircle2, Network, Lock } from 'lucide-react';
+import { ArrowLeft, Check, Copy, Smartphone, Terminal, Shield, AlertCircle, CheckCircle2, Network } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -56,50 +56,6 @@ export default function AddPeer() {
                 </div>
 
                 <div className="flex flex-col items-center gap-6 max-w-5xl mx-auto">
-                    {/* Overview Section */}
-                    <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm w-full">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Icon iconNode={Info} className="h-5 w-5 text-blue-600" />
-                                What is PrivyMesh?
-                            </CardTitle>
-                            <CardDescription>
-                                Learn about secure peer-to-peer networking
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4 text-gray-700 dark:text-gray-300">
-                                <p>
-                                    PrivyMesh creates a secure, encrypted mesh network that connects your devices directly to each other. 
-                                    Once connected, your devices can communicate privately without routing traffic through central servers.
-                                </p>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                                    <div className="flex items-start gap-3">
-                                        <Icon iconNode={Shield} className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">End-to-End Encryption</h4>
-                                            <p className="text-sm">All traffic is encrypted using WireGuard protocol</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <Icon iconNode={Network} className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Mesh Networking</h4>
-                                            <p className="text-sm">Direct peer-to-peer connections between devices</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <Icon iconNode={Lock} className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Zero Trust</h4>
-                                            <p className="text-sm">Every connection requires authentication</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
                     {/* Install Commands */}
                     <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm w-full">
                         <CardHeader>
@@ -325,42 +281,6 @@ netbird up --setup-key ${generatedKey || '<YOUR_SETUP_KEY>'}`}
                                             <li>Check your internet connection speed if experiencing slow transfers</li>
                                             <li>Ensure peers are online and connected to see them in your network</li>
                                         </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Security & Privacy */}
-                    <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm w-full">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Icon iconNode={Shield} className="h-5 w-5 text-green-600" />
-                                Security & Privacy
-                            </CardTitle>
-                            <CardDescription>
-                                How your data is protected
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-                                <p>
-                                    PrivyMesh uses <strong className="text-gray-900 dark:text-white">WireGuard</strong>, a modern VPN protocol 
-                                    that provides state-of-the-art cryptography. Your data is encrypted end-to-end, and the mesh network 
-                                    operates on a zero-trust model where every connection requires authentication.
-                                </p>
-                                <div className="pt-2 space-y-2">
-                                    <div className="flex items-start gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                                        <span>No central server stores or logs your traffic</span>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                                        <span>All peer-to-peer connections are encrypted</span>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                                        <span>Setup keys are single-use or time-limited for security</span>
                                     </div>
                                 </div>
                             </div>
