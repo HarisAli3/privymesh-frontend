@@ -70,7 +70,7 @@ export default function AddPeer() {
                         <CardContent>
                             <div className="space-y-4">
                                 {/* Tabs */}
-                                <div className="flex flex-wrap gap-4 justify-center">
+                                <div className="flex flex-wrap gap-4">
                                     {([
                                         { id: 'windows', label: 'Windows', icon: Monitor },
                                         { id: 'linux', label: 'Linux', icon: Terminal },
