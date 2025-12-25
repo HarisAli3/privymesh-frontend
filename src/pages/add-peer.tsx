@@ -55,9 +55,9 @@ export default function AddPeer() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 items-start">
+                <div className="flex justify-center">
                     {/* Install Commands */}
-                    <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm max-w-3xl w-full">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Icon iconNode={Terminal} className="h-5 w-5 text-blue-600" />
