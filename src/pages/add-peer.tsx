@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Icon } from '@/components/icon';
-import { ArrowLeft, Check, Copy, Smartphone, Terminal, Shield, AlertCircle, CheckCircle2, Network } from 'lucide-react';
+import { ArrowLeft, Check, Copy, Smartphone, Terminal, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -218,17 +218,6 @@ netbird up --setup-key ${generatedKey || '<YOUR_SETUP_KEY>'}`}
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-3">
-                                        <div className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mt-0.5">
-                                            <Network className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Peer Discovery</h4>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                You'll be able to see and connect to other peers in your network from the dashboard.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
                                         <div className="flex-shrink-0 w-6 h-6 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mt-0.5">
                                             <Shield className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                                         </div>
@@ -262,24 +251,14 @@ netbird up --setup-key ${generatedKey || '<YOUR_SETUP_KEY>'}`}
                                         <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Connection Issues</h4>
                                         <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
                                             <li>Ensure your firewall allows PrivyMesh/NetBird traffic</li>
-                                            <li>Check that your network allows UDP traffic on port 51820</li>
-                                            <li>Verify your setup key is correct and hasn't expired</li>
+                                            <li>Check that your network allows UDP traffic</li>
                                         </ul>
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Installation Problems</h4>
                                         <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
                                             <li>On Linux, ensure you have root/sudo privileges for installation</li>
-                                            <li>On macOS, you may need to allow the app in System Preferences &gt; Security</li>
                                             <li>On Windows, check Windows Defender isn't blocking the installer</li>
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Performance Tips</h4>
-                                        <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                                            <li>Keep the application running in the background for best connectivity</li>
-                                            <li>Check your internet connection speed if experiencing slow transfers</li>
-                                            <li>Ensure peers are online and connected to see them in your network</li>
                                         </ul>
                                     </div>
                                 </div>
