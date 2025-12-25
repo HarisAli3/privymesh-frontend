@@ -1,14 +1,12 @@
 import AppSidebarLayout from '@/layouts/AppSidebarLayout';
 import { type BreadcrumbItem } from '@/types';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Icon } from '@/components/icon';
-import { ArrowLeft, Check, Copy, KeyRound, Save, Smartphone, Terminal } from 'lucide-react';
+import { ArrowLeft, Check, Copy, Smartphone, Terminal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -26,42 +24,8 @@ type OsTab = 'windows' | 'macos' | 'linux' | 'ios' | 'android';
 
 export default function AddPeer() {
     const [osTab, setOsTab] = useState<OsTab>('windows');
-    const [setupKeyName, setSetupKeyName] = useState('Default Key');
-    const [isReusable, setIsReusable] = useState(true);
-    const [usageLimit, setUsageLimit] = useState<number>(0); // 0 = unlimited when reusable
-    const [expiresIn, setExpiresIn] = useState<'never' | '24h' | '7d' | '30d'>('30d');
-    const [autoGroups, setAutoGroups] = useState<string>(''); // comma-separated
     const [generatedKey, setGeneratedKey] = useState<string>('');
-    const [creatingKey, setCreatingKey] = useState<boolean>(false);
     const [copied, setCopied] = useState<Record<string, boolean>>({});
-
-    const expirationLabel = useMemo(() => {
-        switch (expiresIn) {
-            case 'never':
-                return 'Never';
-            case '24h':
-                return '24 hours';
-            case '7d':
-                return '7 days';
-            case '30d':
-                return '30 days';
-            default:
-                return '';
-        }
-    }, [expiresIn]);
-
-    const handleCreateKey = async () => {
-        setCreatingKey(true);
-        try {
-            // Simulate API call that creates a setup key (NetBird-style)
-            await new Promise(resolve => setTimeout(resolve, 600));
-            const random = Math.random().toString(36).slice(2, 10).toUpperCase();
-            const key = `PM-${random}-${Date.now().toString().slice(-6)}`;
-            setGeneratedKey(key);
-        } finally {
-            setCreatingKey(false);
-        }
-    };
 
     const handleCopy = async (id: string, text: string) => {
         try {
@@ -87,111 +51,12 @@ export default function AddPeer() {
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Add Peer</h1>
                         <p className="text-gray-600 dark:text-gray-300">
-                            Create a setup key and run the install command on your device to join the network.
+                            Run the install command on your device to join the network.
                         </p>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                    {/* Create Setup Key */}
-                    <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Icon iconNode={KeyRound} className="h-5 w-5 text-blue-600" />
-                                Create setup key
-                            </CardTitle>
-                            <CardDescription>
-                                Setup keys let new devices authenticate once and join your mesh securely.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-5">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="keyName">Name</Label>
-                                        <Input id="keyName" value={setupKeyName} onChange={(e) => setSetupKeyName(e.target.value)} placeholder="e.g. Engineering laptop key" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="expires">Expires</Label>
-                                        <Select value={expiresIn} onValueChange={(v: 'never' | '24h' | '7d' | '30d') => setExpiresIn(v)}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select expiration" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="30d">30 days</SelectItem>
-                                                <SelectItem value="7d">7 days</SelectItem>
-                                                <SelectItem value="24h">24 hours</SelectItem>
-                                                <SelectItem value="never">Never</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                        <Label htmlFor="type">Type</Label>
-                                        <div className="flex items-center gap-3 bg-gray-100 dark:bg-gray-700 p-1 rounded-md w-fit">
-                                            <Button type="button" size="sm" variant={isReusable ? 'default' : 'ghost'} onClick={() => setIsReusable(true)}>Reusable</Button>
-                                            <Button type="button" size="sm" variant={!isReusable ? 'default' : 'ghost'} onClick={() => setIsReusable(false)}>One-time</Button>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="usage">Usage limit</Label>
-                                        <Input id="usage" type="number" min={0} value={usageLimit} onChange={(e) => setUsageLimit(Number(e.target.value))} placeholder={isReusable ? '0 = unlimited' : '1'} />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="groups">Auto-assign groups (comma-separated)</Label>
-                                    <Input id="groups" value={autoGroups} onChange={(e) => setAutoGroups(e.target.value)} placeholder="e.g. developers, admins" />
-                                    {autoGroups.trim() && (
-                                        <div className="flex flex-wrap gap-2 pt-1">
-                                            {autoGroups.split(',').map(g => g.trim()).filter(Boolean).map(g => (
-                                                <Badge key={g} variant="secondary">{g}</Badge>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="flex items-center gap-3 pt-2">
-                                    <Button onClick={handleCreateKey} disabled={creatingKey}>
-                                        {creatingKey ? (
-                                            <>
-                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                                Creating key...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Icon iconNode={Save} className="h-4 w-4 mr-2" />
-                                                Create key
-                                            </>
-                                        )}
-                                    </Button>
-                                    {generatedKey && (
-                                        <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-md px-3 py-2">
-                                            <code className="font-mono text-sm">{generatedKey}</code>
-                                    <Button
-                                        type="button"
-                                                size="sm"
-                                                variant="ghost"
-                                                onClick={() => handleCopy('setupKey', generatedKey)}
-                                                title="Copy setup key"
-                                            >
-                                                <Icon iconNode={copied['setupKey'] ? Check : Copy} className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {generatedKey && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        Key "{setupKeyName}" • {isReusable ? 'Reusable' : 'One-time'} • Expires: {expirationLabel}
-                                    </p>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
-
+                <div className="grid grid-cols-1 gap-6 items-start">
                     {/* Install Commands */}
                     <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
                         <CardHeader>
