@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Icon } from '@/components/icon';
-import { ArrowLeft, Check, Copy, Smartphone, Terminal, Shield, AlertCircle, CheckCircle2, Monitor, Laptop, Clock } from 'lucide-react';
+import { ArrowLeft, Check, Copy, Terminal, Shield, AlertCircle, CheckCircle2, Monitor } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -70,7 +70,7 @@ export default function AddPeer() {
                         <CardContent>
                             <div className="space-y-4">
                                 {/* Tabs */}
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-4 justify-center">
                                     {([
                                         { id: 'windows', label: 'Windows', icon: Monitor },
                                         { id: 'linux', label: 'Linux', icon: Terminal },
@@ -78,12 +78,12 @@ export default function AddPeer() {
                                         <Button
                                             key={t.id}
                                             type="button"
-                                            size="sm"
+                                            size="lg"
                                             variant={osTab === t.id ? 'default' : 'outline'}
                                             onClick={() => setOsTab(t.id)}
-                                            className="flex items-center gap-2"
+                                            className="flex items-center gap-2 px-6 py-3"
                                         >
-                                            <Icon iconNode={t.icon} className="h-4 w-4" />
+                                            <Icon iconNode={t.icon} className="h-5 w-5" />
                                             {t.label}
                                     </Button>
                                     ))}
@@ -119,15 +119,6 @@ export default function AddPeer() {
                                                         2
                                                     </div>
                                                     <div>
-                                                        <h4 className="font-medium text-gray-900 dark:text-white">Click on "Connect" from the PrivyMesh icon in your system tray</h4>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-start gap-4">
-                                                    <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
-                                                        3
-                                                    </div>
-                                                    <div>
                                                         <h4 className="font-medium text-gray-900 dark:text-white">Sign up using your email address</h4>
                                                     </div>
                                                 </div>
@@ -156,27 +147,6 @@ netbird up --setup-key ${generatedKey || '<YOUR_SETUP_KEY>'}`}
                                     </div>
                                 )}
 
-                                {/* Coming Soon Section */}
-                                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <Icon iconNode={Clock} className="h-5 w-5 text-gray-400" />
-                                        <h3 className="text-lg font-semibold text-gray-500 dark:text-gray-400">Coming Soon</h3>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                        <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <Laptop className="h-5 w-5 text-gray-400" />
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">macOS</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <Smartphone className="h-5 w-5 text-gray-400" />
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">iOS</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <Smartphone className="h-5 w-5 text-gray-400" />
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">Android</span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </CardContent>
                     </Card>
