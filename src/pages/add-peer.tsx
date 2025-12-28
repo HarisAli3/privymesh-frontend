@@ -23,7 +23,6 @@ type OsTab = 'windows' | 'linux';
 
 export default function AddPeer() {
     const [osTab, setOsTab] = useState<OsTab>('windows');
-    const generatedKey = ''; // Placeholder - setup key creation removed
     const [copied, setCopied] = useState<Record<string, boolean>>({});
 
     const handleCopy = async (id: string, text: string) => {
