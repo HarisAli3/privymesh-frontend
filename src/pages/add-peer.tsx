@@ -135,11 +135,11 @@ export default function AddPeer() {
                                         </div>
                                         <div className="relative">
                                             <pre className="bg-gray-900 text-gray-100 rounded-md p-4 overflow-x-auto text-sm">
-{`curl -fsSL https://get.privymesh.sh | sh
-netbird up --setup-key ${generatedKey || '<YOUR_SETUP_KEY>'}`}
+{`curl -fsSL https://install.privymesh.com | sh
+privymesh login `}
                                             </pre>
                                             <div className="absolute top-2 right-2">
-                                                <Button size="sm" variant="secondary" onClick={() => handleCopy('cmd-linux', `curl -fsSL https://get.privymesh.sh | sh\nnetbird up --setup-key ${generatedKey || '<YOUR_SETUP_KEY>'}`)}>
+                                                <Button size="sm" variant="secondary" onClick={() => handleCopy('cmd-linux', `curl -fsSL https://install.privymesh.com | sh\nprivymesh login`)}>
                                                     <Icon iconNode={copied['cmd-linux'] ? Check : Copy} className="h-4 w-4" />
                                                 </Button>
                                             </div>
