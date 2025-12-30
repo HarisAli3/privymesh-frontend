@@ -17,6 +17,7 @@ import About from '@/pages/about';
 import Contact from '@/pages/contact';
 import Docs from '@/pages/docs';
 import Pricing from '@/pages/pricing';
+import TokenDisplayPage from '@/pages/token-display';
 
 // Initialize theme on app start
 initializeTheme();
@@ -64,6 +65,11 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/token-display" element={
+              <ProtectedRoute>
+                <TokenDisplayPage />
+              </ProtectedRoute>
+            } />
             <Route path="/pm-auth" element={<AuthCallback />} />
             <Route path="/pm-silent-auth" element={<SilentCallback />} />
           </Routes>
