@@ -26,13 +26,13 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
+        title: 'Releases',
+        href: 'https://github.com/HarisAli3/privymesh-app-releases',
         icon: Folder,
     },
     {
         title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
+        href: 'https://privymesh.com/docs',
         icon: BookOpen,
     },
 ];
