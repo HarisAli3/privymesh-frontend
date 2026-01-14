@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Frontend CI/CD
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_PASSWORD }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -61,7 +61,27 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-#          cache-to: type=gha,mode=max
+#          cache-from: type=gha
           platforms: linux/amd64
 
+  deploy:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: SSH into VM and deploy frontend
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: deploy
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            echo "Logging into GHCR"
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+            cd /opt/privymesh
+            docker compose pull frontend
+            docker compose up -d frontend
