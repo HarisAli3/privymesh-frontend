@@ -31,7 +31,7 @@ export default function Login() {
           Sign in to your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          Secure authentication powered by Zitadel
+          Secure authentication powered by Authenticator
         </p>
       </div>
 
@@ -40,7 +40,7 @@ export default function Login() {
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
             <CardDescription>
-              Please sign in with Zitadel to continue
+              Please sign in with Authenticator to continue
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -67,7 +67,7 @@ export default function Login() {
                     <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
-                    Sign in with Zitadel
+                    Sign in with Authenticator
                   </div>
                 )}
               </Button>
@@ -76,7 +76,7 @@ export default function Login() {
             <div className="text-center text-sm text-gray-600 dark:text-gray-400">
               <p className="mb-2">Don't have an account?</p>
               <p className="text-gray-500 dark:text-gray-500">
-                Your account will be created automatically when you sign in with Zitadel
+                Your account will be created automatically when you sign in with Authenticator
               </p>
             </div>
           </CardContent>
