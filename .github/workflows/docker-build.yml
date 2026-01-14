@@ -80,8 +80,28 @@ jobs:
           port: 22
           script: |
             set -e
-            echo "Logging into GHCR"
+            
+            echo "=== Starting Frontend Deploy ==="
+            
+            echo "Step 1: Logging into GHCR"
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+            echo "✅ Logged into GHCR"
+
+            echo "Step 2: Navigating to app directory"
             cd /opt/privymesh
+            echo "✅ Current directory: $(pwd)"
+
+            echo "Step 3: Pulling latest frontend image"
             docker compose pull frontend
+            echo "✅ Pulled latest frontend image"
+
+            echo "Step 4: Restarting frontend container"
             docker compose up -d frontend
+            echo "✅ Frontend container updated"
+            docker compose ps frontend
+
+            echo "Step 5: Logging out of GHCR"
+            docker logout ghcr.io
+            echo "✅ Logged out of GHCR"
+
+            echo "=== Frontend Deploy Completed Successfully ==="
