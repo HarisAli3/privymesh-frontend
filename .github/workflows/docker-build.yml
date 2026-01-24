@@ -62,8 +62,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
-          cache-from: type=registry,ref=ghcr.io/HarisAli3/frontend:latest
-          cache-to: type=registry,ref=ghcr.io/HarisAli3/frontend:latest,mode=max
+          cache-from: type=registry,ref=ghcr.io/harisAli3/frontend:latest
+          cache-to: type=registry,ref=ghcr.io/harisAli3/frontend:latest,mode=max
 
   deploy:
     name: Deploy Frontend
