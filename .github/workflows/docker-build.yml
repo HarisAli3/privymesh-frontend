@@ -61,8 +61,9 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-#          cache-from: type=gha
           platforms: linux/amd64
+          cache-from: type=registry,ref=ghcr.io/HarisAli3/frontend:latest
+          cache-to: type=registry,ref=ghcr.io/HarisAli3/frontend:latest,mode=max
 
   deploy:
     name: Deploy Frontend
