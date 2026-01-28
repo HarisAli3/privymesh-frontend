@@ -25,7 +25,7 @@ COPY index.html vite.config.ts tsconfig.json postcss.config.js tailwind.config.j
 RUN yarn build
 
 # Production stage
-FROM nginx:1.29.3-alpine
+FROM nginx:1.29.4-alpine
 
 # Copy built files from builder
 COPY --from=builder /app/build /usr/share/nginx/html
