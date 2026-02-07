@@ -82,7 +82,7 @@ const user = await zitadel.userManager.signinRedirectCallback();
 
 2. **Browser Cookies (Persistence):**
    ```typescript
-   Cookies.set('zitadel_token', user.access_token, { expires: 7 });
+   Cookies.set('zitadel_token', user.access_token, { es: 7 });
    Cookies.set('zitadel_user', JSON.stringify(userInfo), { expires: 7 });
    ```
    - Allows token to persist across page refreshes

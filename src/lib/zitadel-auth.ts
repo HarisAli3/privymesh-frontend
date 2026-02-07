@@ -12,48 +12,58 @@ function normalizeUrlOrPath(value: string | undefined, fallbackPath: string): st
 }
 
 // Consolidated auth configuration (prefers AUTH_* like NetBird, falls back to ZITADEL_*)
-const AUTH_CONFIG = {
-  instanceUrl: getEnv('AUTH_AUTHORITY') || 'http://localhost:8080',
-  clientId: getEnv('AUTH_CLIENT_ID') || '',
+const ZITADEL_CONFIG = {
+  instanceUrl:
+    getEnv('AUTH_AUTHORITY') ||
+    getEnv('ZITADEL_INSTANCE_URL') ||
+    'http://localhost:8080',
+  clientId:
+    getEnv('AUTH_CLIENT_ID') ||
+    getEnv('ZITADEL_CLIENT_ID') ||
+    '',
   redirectUri: normalizeUrlOrPath(
-      getEnv('AUTH_REDIRECT_URI'),
-      '/pm-auth',
+    getEnv('AUTH_REDIRECT_URI') ||
+      getEnv('ZITADEL_REDIRECT_URI'),
+    '/pm-auth',
   ),
   silentRedirectUri: normalizeUrlOrPath(
-      getEnv('AUTH_SILENT_REDIRECT_URI'),
-      '/pm-silent-auth',
+    getEnv('AUTH_SILENT_REDIRECT_URI') ||
+      getEnv('ZITADEL_SILENT_REDIRECT_URI'),
+    '/pm-silent-auth',
   ),
   postLogoutRedirectUri:
-      getEnv('AUTH_POST_LOGOUT_REDIRECT_URI') ||
-      `${window.location.origin}/`,
+    getEnv('ZITADEL_POST_LOGOUT_REDIRECT_URI') ||
+    `${window.location.origin}/`,
   scopes:
-      getEnv('AUTH_SUPPORTED_SCOPES') ||
-      'openid email profile offline_access',
-  audience:
-      getEnv('AUTH_AUDIENCE') || '',
+    getEnv('AUTH_SUPPORTED_SCOPES') ||
+    'openid email profile offline_access',
+  auth_audience:
+    getEnv('AUTH_AUDIENCE') ||
+    getEnv('ZITADEL_AUTH_AUDIENCE') ||
+    '',
 };
 
-
 // Validate configuration before creating Zitadel auth
-if (!AUTH_CONFIG.clientId) {
-  console.error('❌ AUTH_CLIENT_ID is not set!');
-  console.error('AUTH_AUTHORITY:', AUTH_CONFIG.instanceUrl);
-  throw new Error('AUTH_CLIENT_ID is required');
+if (!ZITADEL_CONFIG.clientId) {
+  console.error('❌ ZITADEL_CLIENT_ID is not set!');
+  console.error('Current environment variables:');
+  console.error('- ZITADEL_CLIENT_ID:', getEnv('ZITADEL_CLIENT_ID') || 'NOT SET');
+  console.error('- AUTH_CLIENT_ID:', getEnv('AUTH_CLIENT_ID') || 'NOT SET');
+  console.error('- ZITADEL_INSTANCE_URL:', ZITADEL_CONFIG.instanceUrl);
+  console.error('Please set ZITADEL_CLIENT_ID or AUTH_CLIENT_ID environment variable.');
+  throw new Error('ZITADEL_CLIENT_ID is required. Please set ZITADEL_CLIENT_ID or AUTH_CLIENT_ID environment variable.');
 }
 
 const zitadelConfig: ZitadelConfig = {
-  authority: AUTH_CONFIG.instanceUrl,
-  client_id: AUTH_CONFIG.clientId,
-  redirect_uri: AUTH_CONFIG.redirectUri,
-  post_logout_redirect_uri: AUTH_CONFIG.postLogoutRedirectUri,
+  authority: ZITADEL_CONFIG.instanceUrl,
+  client_id: ZITADEL_CONFIG.clientId,
+  redirect_uri: ZITADEL_CONFIG.redirectUri,
+  post_logout_redirect_uri: ZITADEL_CONFIG.postLogoutRedirectUri,
   response_type: 'code',
-  scope: AUTH_CONFIG.scopes,
-  silent_redirect_uri: AUTH_CONFIG.silentRedirectUri,
-  ...(AUTH_CONFIG.audience
-      ? { extraQueryParams: { audience: AUTH_CONFIG.audience } }
-      : {}),
+  scope: ZITADEL_CONFIG.scopes,
+  silent_redirect_uri: ZITADEL_CONFIG.silentRedirectUri,
+  ...(ZITADEL_CONFIG.auth_audience ? { extraQueryParams: { audience: ZITADEL_CONFIG.auth_audience } } : {}),
 };
-
 
 const zitadel = createZitadelAuth(zitadelConfig);
 
@@ -62,7 +72,7 @@ class ZitadelAuthService {
   // Track manually updated profile data to preserve it across token refreshes
   // Stored in localStorage to persist across page refreshes
   private readonly MANUAL_UPDATES_STORAGE_KEY = 'zitadel_manual_profile_updates';
-  
+
   private getManualProfileUpdates(): { name?: string; email?: string } | null {
     try {
       const stored = localStorage.getItem(this.MANUAL_UPDATES_STORAGE_KEY);
@@ -132,7 +142,7 @@ class ZitadelAuthService {
   async login(): Promise<void> {
     try {
       console.log('[ZitadelAuth] Starting login process');
-      
+
       // Before starting a new login, clear any stale user state
       // BUT: Do NOT clear the state store - it might contain valid state from a previous attempt
       // The state store will be overwritten when authorize() creates new state
@@ -149,19 +159,19 @@ class ZitadelAuthService {
             return;
           }
         }
-        
+
         // Step 2: Check for very old state store entries (older than 10 minutes)
         // Only clear state that's definitely stale, not recent state that might be valid
         try {
-          const authority = AUTH_CONFIG.instanceUrl;
-          const clientId = AUTH_CONFIG.clientId;
+          const authority = ZITADEL_CONFIG.instanceUrl;
+          const clientId = ZITADEL_CONFIG.clientId;
           const stateStorePrefix = `oidc.${authority}.${clientId}`;
-          
+
           const allStorageKeys = [
             ...Object.keys(localStorage),
             ...Object.keys(sessionStorage)
           ];
-          
+
           // Check for state keys - we won't clear them, authorize() will overwrite them
           // Don't clear recent state as it might be from a current login attempt
           allStorageKeys.forEach(key => {
@@ -180,7 +190,7 @@ class ZitadelAuthService {
         console.warn('[ZitadelAuth] Error preparing for login:', clearError);
         // Continue anyway - try to start fresh login
       }
-      
+
       console.log('[ZitadelAuth] Starting OAuth authorization - this will create new state');
       // authorize() will create a new state and store it
       // This will overwrite any existing state in the state store
@@ -195,7 +205,7 @@ class ZitadelAuthService {
   async handleCallback(): Promise<User> {
     try {
       console.log('[ZitadelAuth] Processing OAuth callback');
-      
+
       // Before processing callback, check if there's stale user (but DON'T clear state store)
       // The state store must remain intact for the callback to match
       try {
@@ -210,11 +220,11 @@ class ZitadelAuthService {
         // Ignore - user might not exist
         console.log('[ZitadelAuth] No existing user found, proceeding with callback');
       }
-      
+
       // Process the callback - this will match the state from the state store
       console.log('[ZitadelAuth] Calling signinRedirectCallback to process OAuth response');
       const user = await zitadel.userManager.signinRedirectCallback() as User;
-      
+
       if (user && !user.expired) {
         console.log('[ZitadelAuth] Callback successful, user authenticated');
         this.user = user;
@@ -229,26 +239,26 @@ class ZitadelAuthService {
       const errorString = String(error);
       console.error('[ZitadelAuth] Error details:', errorMessage);
       console.error('[ZitadelAuth] Full error:', errorString);
-      
+
       // Check for specific error types that indicate stale state
-      const isStateMismatch = errorString.includes('state') || 
+      const isStateMismatch = errorString.includes('state') ||
                               errorString.includes('State') ||
                               errorString.includes('mismatch') ||
                               errorString.includes('Invalid state') ||
                               errorMessage.includes('state') ||
                               errorString.includes('No matching state') ||
                               errorString.includes('matching state');
-      
+
       if (isStateMismatch) {
         console.log('[ZitadelAuth] State mismatch detected - this usually means state was cleared before callback');
         console.log('[ZitadelAuth] Clearing ALL OAuth state to allow fresh login');
       }
-      
+
       // On callback failure, clear ALL state to allow fresh login
       // This prevents stale oidc-client state from blocking new login attempts
       console.log('[ZitadelAuth] Clearing all auth state due to callback failure');
       this.clearAllAuthState();
-      
+
       throw error;
     }
   }
@@ -307,10 +317,10 @@ class ZitadelAuthService {
   // Get user info
   getUserInfo() {
     if (!this.user) return null;
-    
+
     // Ensure manual profile updates are applied
     this.applyManualProfileUpdates(this.user);
-    
+
     return {
       id: this.user.profile.sub,
       name: this.user.profile.name || this.user.profile.preferred_username || 'Unknown User',
@@ -338,20 +348,20 @@ class ZitadelAuthService {
       console.warn('[ZitadelAuth] Cannot update profile: user not loaded');
       return;
     }
-    
+
     console.log('[ZitadelAuth] Updating user profile:', updatedData);
     console.log('[ZitadelAuth] Current profile before update:', {
       name: this.user.profile?.name,
       email: this.user.profile?.email,
     });
-    
+
     // Store manual updates in localStorage so they persist across page refreshes
     const manualUpdates = {
       ...(updatedData.name && { name: updatedData.name }),
       ...(updatedData.email && { email: updatedData.email }),
     };
     this.setManualProfileUpdates(manualUpdates);
-    
+
     // Override the profile data in the user object so getUserInfo() returns updated values
     if (updatedData.name && this.user.profile) {
       this.user.profile.name = updatedData.name;
@@ -363,13 +373,13 @@ class ZitadelAuthService {
     if (updatedData.email && this.user.profile) {
       this.user.profile.email = updatedData.email;
     }
-    
+
     console.log('[ZitadelAuth] Profile after update:', {
       name: this.user.profile?.name,
       email: this.user.profile?.email,
     });
     console.log('[ZitadelAuth] Stored manual profile updates in localStorage:', manualUpdates);
-    
+
     // Update cookie with new data
     const currentUserInfo = this.getUserInfo();
     if (currentUserInfo) {
@@ -387,11 +397,11 @@ class ZitadelAuthService {
   // Loads updates from localStorage if not already loaded
   public applyManualProfileUpdates(user: User | null) {
     if (!user) return;
-    
+
     // Load manual updates from localStorage (persists across page refreshes)
     const manualUpdates = this.getManualProfileUpdates();
     if (!manualUpdates) return;
-    
+
     if (user.profile) {
       if (manualUpdates.name) {
         user.profile.name = manualUpdates.name;
@@ -402,7 +412,7 @@ class ZitadelAuthService {
       if (manualUpdates.email) {
         user.profile.email = manualUpdates.email;
       }
-      
+
       console.log('[ZitadelAuth] Applied manual profile updates from localStorage:', manualUpdates);
     }
   }
@@ -422,17 +432,17 @@ class ZitadelAuthService {
   // Used when account is deleted (account no longer exists in Zitadel)
   public clearAllAuthState(): void {
     console.log('[ZitadelAuth] Clearing all authentication state');
-    
+
     // Step 1: Clear in-memory state
     this.user = null;
     this._clearUserCookie();
     this.clearManualProfileUpdates();
-    
+
     // Step 2: Clear UserManager storage - this clears oidc-client user state
     zitadel.userManager.removeUser().catch(() => {
       // Ignore errors - user might not exist
     });
-    
+
     // Step 3: Clear UserManager's state store (OAuth state parameters)
     // This is CRITICAL - the state store holds OAuth state that causes mismatches
     try {
@@ -445,19 +455,19 @@ class ZitadelAuthService {
           stateStore.clear();
           console.log('[ZitadelAuth] Cleared UserManager state store via clear()');
         }
-        
+
         // Also try to clear all state store keys manually
         // The state store typically uses keys like: oidc.{authority}.{clientId}.state
-        const authority = AUTH_CONFIG.instanceUrl;
-        const clientId = AUTH_CONFIG.clientId;
+        const authority = ZITADEL_CONFIG.instanceUrl;
+        const clientId = ZITADEL_CONFIG.clientId;
         const stateStorePrefix = `oidc.${authority}.${clientId}`;
-        
+
         // Clear all keys that match the state store pattern
         const allStorageKeys = [
           ...Object.keys(localStorage),
           ...Object.keys(sessionStorage)
         ];
-        
+
         allStorageKeys.forEach(key => {
           if (key.startsWith(stateStorePrefix) || key.includes('state')) {
             console.log('[ZitadelAuth] Removing state store key:', key);
@@ -469,11 +479,11 @@ class ZitadelAuthService {
     } catch (error) {
       console.warn('[ZitadelAuth] Failed to clear UserManager state store:', error);
     }
-    
+
     // Step 4: Clear all localStorage/sessionStorage - be VERY aggressive
     try {
-      const authority = AUTH_CONFIG.instanceUrl;
-      const clientId = AUTH_CONFIG.clientId;
+      const authority = ZITADEL_CONFIG.instanceUrl;
+      const clientId = ZITADEL_CONFIG.clientId;
       
       // Clear localStorage - remove ALL keys that could be related
       const localStorageKeys = Object.keys(localStorage);

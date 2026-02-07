@@ -71,8 +71,8 @@ export default function AddPeer() {
                                 {/* Tabs */}
                                 <div className="flex flex-wrap gap-4">
                                     {([
-                                        { id: 'windows', label: 'Windows', icon: Monitor },
                                         { id: 'linux', label: 'Linux', icon: Terminal },
+                                        { id: 'windows', label: 'Windows', icon: Monitor },
                                     ] as { id: OsTab; label: string; icon: typeof Monitor }[]).map(t => (
                                         <Button
                                             key={t.id}
