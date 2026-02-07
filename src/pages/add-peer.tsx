@@ -22,7 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 type OsTab = 'windows' | 'linux';
 
 export default function AddPeer() {
-    const [osTab, setOsTab] = useState<OsTab>('windows');
+    const [osTab, setOsTab] = useState<OsTab>('linux');
     const [copied, setCopied] = useState<Record<string, boolean>>({});
 
     const handleCopy = async (id: string, text: string) => {
