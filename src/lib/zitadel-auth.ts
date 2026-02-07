@@ -12,58 +12,48 @@ function normalizeUrlOrPath(value: string | undefined, fallbackPath: string): st
 }
 
 // Consolidated auth configuration (prefers AUTH_* like NetBird, falls back to ZITADEL_*)
-const ZITADEL_CONFIG = {
-  instanceUrl:
-    getEnv('AUTH_AUTHORITY') ||
-    getEnv('ZITADEL_INSTANCE_URL') ||
-    'http://localhost:8080',
-  clientId:
-    getEnv('AUTH_CLIENT_ID') ||
-    getEnv('ZITADEL_CLIENT_ID') ||
-    '',
+const AUTH_CONFIG = {
+  instanceUrl: getEnv('AUTH_AUTHORITY') || 'http://localhost:8080',
+  clientId: getEnv('AUTH_CLIENT_ID') || '',
   redirectUri: normalizeUrlOrPath(
-    getEnv('AUTH_REDIRECT_URI') ||
-      getEnv('ZITADEL_REDIRECT_URI'),
-    '/pm-auth',
+      getEnv('AUTH_REDIRECT_URI'),
+      '/pm-auth',
   ),
   silentRedirectUri: normalizeUrlOrPath(
-    getEnv('AUTH_SILENT_REDIRECT_URI') ||
-      getEnv('ZITADEL_SILENT_REDIRECT_URI'),
-    '/pm-silent-auth',
+      getEnv('AUTH_SILENT_REDIRECT_URI'),
+      '/pm-silent-auth',
   ),
   postLogoutRedirectUri:
-    getEnv('ZITADEL_POST_LOGOUT_REDIRECT_URI') ||
-    `${window.location.origin}/`,
+      getEnv('AUTH_POST_LOGOUT_REDIRECT_URI') ||
+      `${window.location.origin}/`,
   scopes:
-    getEnv('AUTH_SUPPORTED_SCOPES') ||
-    'openid email profile offline_access',
-  auth_audience:
-    getEnv('AUTH_AUDIENCE') ||
-    getEnv('ZITADEL_AUTH_AUDIENCE') ||
-    '',
+      getEnv('AUTH_SUPPORTED_SCOPES') ||
+      'openid email profile offline_access',
+  audience:
+      getEnv('AUTH_AUDIENCE') || '',
 };
 
+
 // Validate configuration before creating Zitadel auth
-if (!ZITADEL_CONFIG.clientId) {
-  console.error('❌ ZITADEL_CLIENT_ID is not set!');
-  console.error('Current environment variables:');
-  console.error('- ZITADEL_CLIENT_ID:', getEnv('ZITADEL_CLIENT_ID') || 'NOT SET');
-  console.error('- AUTH_CLIENT_ID:', getEnv('AUTH_CLIENT_ID') || 'NOT SET');
-  console.error('- ZITADEL_INSTANCE_URL:', ZITADEL_CONFIG.instanceUrl);
-  console.error('Please set ZITADEL_CLIENT_ID or AUTH_CLIENT_ID environment variable.');
-  throw new Error('ZITADEL_CLIENT_ID is required. Please set ZITADEL_CLIENT_ID or AUTH_CLIENT_ID environment variable.');
+if (!AUTH_CONFIG.clientId) {
+  console.error('❌ AUTH_CLIENT_ID is not set!');
+  console.error('AUTH_AUTHORITY:', AUTH_CONFIG.instanceUrl);
+  throw new Error('AUTH_CLIENT_ID is required');
 }
 
 const zitadelConfig: ZitadelConfig = {
-  authority: ZITADEL_CONFIG.instanceUrl,
-  client_id: ZITADEL_CONFIG.clientId,
-  redirect_uri: ZITADEL_CONFIG.redirectUri,
-  post_logout_redirect_uri: ZITADEL_CONFIG.postLogoutRedirectUri,
+  authority: AUTH_CONFIG.instanceUrl,
+  client_id: AUTH_CONFIG.clientId,
+  redirect_uri: AUTH_CONFIG.redirectUri,
+  post_logout_redirect_uri: AUTH_CONFIG.postLogoutRedirectUri,
   response_type: 'code',
-  scope: ZITADEL_CONFIG.scopes,
-  silent_redirect_uri: ZITADEL_CONFIG.silentRedirectUri,
-  ...(ZITADEL_CONFIG.auth_audience ? { extraQueryParams: { audience: ZITADEL_CONFIG.auth_audience } } : {}),
+  scope: AUTH_CONFIG.scopes,
+  silent_redirect_uri: AUTH_CONFIG.silentRedirectUri,
+  ...(AUTH_CONFIG.audience
+      ? { extraQueryParams: { audience: AUTH_CONFIG.audience } }
+      : {}),
 };
+
 
 const zitadel = createZitadelAuth(zitadelConfig);
 
@@ -163,8 +153,8 @@ class ZitadelAuthService {
         // Step 2: Check for very old state store entries (older than 10 minutes)
         // Only clear state that's definitely stale, not recent state that might be valid
         try {
-          const authority = ZITADEL_CONFIG.instanceUrl;
-          const clientId = ZITADEL_CONFIG.clientId;
+          const authority = AUTH_CONFIG.instanceUrl;
+          const clientId = AUTH_CONFIG.clientId;
           const stateStorePrefix = `oidc.${authority}.${clientId}`;
           
           const allStorageKeys = [
@@ -458,8 +448,8 @@ class ZitadelAuthService {
         
         // Also try to clear all state store keys manually
         // The state store typically uses keys like: oidc.{authority}.{clientId}.state
-        const authority = ZITADEL_CONFIG.instanceUrl;
-        const clientId = ZITADEL_CONFIG.clientId;
+        const authority = AUTH_CONFIG.instanceUrl;
+        const clientId = AUTH_CONFIG.clientId;
         const stateStorePrefix = `oidc.${authority}.${clientId}`;
         
         // Clear all keys that match the state store pattern
@@ -482,8 +472,8 @@ class ZitadelAuthService {
     
     // Step 4: Clear all localStorage/sessionStorage - be VERY aggressive
     try {
-      const authority = ZITADEL_CONFIG.instanceUrl;
-      const clientId = ZITADEL_CONFIG.clientId;
+      const authority = AUTH_CONFIG.instanceUrl;
+      const clientId = AUTH_CONFIG.clientId;
       
       // Clear localStorage - remove ALL keys that could be related
       const localStorageKeys = Object.keys(localStorage);
