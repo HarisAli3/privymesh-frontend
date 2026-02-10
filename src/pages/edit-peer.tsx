@@ -2,7 +2,7 @@ import AppSidebarLayout from '@/layouts/AppSidebarLayout';
 import { type BreadcrumbItem } from '@/types';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getPeer, updatePeer, type PeerResponse } from '@/lib/api';
+import { getPeer, getPeers, updatePeer, type PeerResponse } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -22,6 +22,7 @@ export default function EditPeer() {
     const { peerId } = useParams<{ peerId: string }>();
     const navigate = useNavigate();
     const [peer, setPeer] = useState<ExtendedPeerResponse | null>(null);
+    const [allPeers, setAllPeers] = useState<PeerResponse[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -61,11 +62,16 @@ export default function EditPeer() {
                     throw new Error('Invalid peer ID');
                 }
 
-                const peerData = await getPeer(peerId);
+                const [peerData, peersResponse] = await Promise.all([
+                    getPeer(peerId),
+                    getPeers(),
+                ]);
+
                 const extendedPeer = peerData as ExtendedPeerResponse;
                 setPeer(extendedPeer);
                 setName(extendedPeer.name || '');
                 setIpAddress(extendedPeer.ip_address || '');
+                setAllPeers(peersResponse.peers || []);
             } catch (err) {
                 console.error('Error fetching peer:', err);
                 setError(err instanceof Error ? err.message : 'Failed to fetch peer details');
@@ -96,9 +102,24 @@ export default function EditPeer() {
             return;
         }
 
-        if (ipAddress.trim() && !validateIpAddress(ipAddress.trim())) {
+        const trimmedIp = ipAddress.trim();
+
+        if (trimmedIp && !validateIpAddress(trimmedIp)) {
             setSaveError('Invalid IP address format');
             return;
+        }
+
+        // If IP is being changed, ensure it is not already used by another peer
+        if (trimmedIp && peer) {
+            const hasDuplicateIP = allPeers.some((p) => {
+                const existingPeerId = String(p.peer_id ?? p.id);
+                return p.ip_address === trimmedIp && existingPeerId !== String(peerId);
+            });
+
+            if (hasDuplicateIP) {
+                setSaveError('This IP address is already assigned to another peer. Please choose a different IP.');
+                return;
+            }
         }
 
         try {
@@ -114,8 +135,8 @@ export default function EditPeer() {
                 updates.name = name.trim();
             }
             
-            if (ipAddress.trim() !== peer.ip_address) {
-                updates.ip_address = ipAddress.trim();
+            if (trimmedIp !== peer.ip_address) {
+                updates.ip_address = trimmedIp;
             }
 
             if (Object.keys(updates).length === 0) {

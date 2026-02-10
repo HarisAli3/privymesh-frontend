@@ -183,8 +183,19 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
         } else if (field === 'ip' && editIP.trim() && editIP.trim() !== '') {
             // Basic IP validation
             const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-            if (ipRegex.test(editIP.trim())) {
-                handlePeerAction(peerId, 'updateIP', { ip_address: editIP.trim() });
+            const trimmedIP = editIP.trim();
+            if (ipRegex.test(trimmedIP)) {
+                // Check for duplicate IPs among existing peers (excluding the current peer)
+                const hasDuplicateIP = peers.some(
+                    (p) => p.ip === trimmedIP && p.id !== peerId
+                );
+
+                if (hasDuplicateIP) {
+                    alert('This IP address is already in use by another peer. Please choose a different IP.');
+                    return;
+                }
+
+                handlePeerAction(peerId, 'updateIP', { ip_address: trimmedIP });
                 setEditingPeerId(null);
                 setEditingField(null);
                 setEditIP('');
