@@ -208,6 +208,53 @@ export default function Settings() {
                     </div>
                 </div>
 
+                {/* Password Management */}
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                            <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Password & Security</h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Change your account password through the secure PrivyMesh portal
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                            For security, password changes are handled by our identity provider. You&apos;ll be redirected to a
+                            secure page where you can change the password for{' '}
+                            <span className="font-medium text-gray-900 dark:text-white">
+                                {user?.email ?? 'your account'}
+                            </span>
+                            .
+                        </p>
+                        <Button
+                            onClick={() => {
+                                if (!user?.email) {
+                                    setError('Unable to start password change: email is not available.');
+                                    return;
+                                }
+
+                                const baseUrl = 'https://auth.privymesh.com/ui/console/users/me/password';
+                                const url = `${baseUrl}?username=${encodeURIComponent(user.email)}`;
+                                window.location.href = url;
+                            }}
+                            className="h-11 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02]"
+                            disabled={!user?.email}
+                        >
+                            Change Password
+                        </Button>
+                        {!user?.email && (
+                            <p className="text-xs text-red-600 dark:text-red-400">
+                                Your email address is not available. Try reloading the page or signing in again.
+                            </p>
+                        )}
+                    </div>
+                </div>
+
                 {/* Danger Zone */}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
                     <div className="flex items-center space-x-3 mb-6">
