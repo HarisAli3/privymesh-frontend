@@ -106,7 +106,7 @@ export default function AddPeer() {
                                                         <h4 className="font-medium text-gray-900 dark:text-white">Download and run Windows Installer</h4>
                                                         <Button 
                                                             className="bg-blue-600 hover:bg-blue-700 text-white"
-                                                            onClick={() => window.open('https://pkgs.netbird.io/windows/x64?_gl=1*11dsaly*_gcl_au*MjE0MDM0MzY5NC4xNzYwOTYwMzQ5LjI0MzkzODI5Ny4xNzYxMDMzMzE1LjE3NjEwMzMzMTQ.', '_blank')}
+                                                            onClick={() => window.open('https://drive.google.com/uc?export=download&id=1HVl86E1VONeTrtGxI95RyU-yvLEdgGIc\n', '_blank')}
                                                         >
                                                             Download PrivyMesh
                                                         </Button>
