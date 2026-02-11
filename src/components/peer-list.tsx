@@ -25,7 +25,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
+    // DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
@@ -252,15 +252,15 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                             <span className="text-sm text-gray-600 dark:text-gray-300">
                                 {selectedPeers.length} selected
                             </span>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handlePeerAction('bulk', 'disconnect')}
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-                            >
-                                <Icon iconNode={WifiOff} className="h-4 w-4 mr-1" />
-                                Disconnect
-                            </Button>
+                            {/*<Button*/}
+                            {/*    variant="outline"*/}
+                            {/*    size="sm"*/}
+                            {/*    onClick={() => handlePeerAction('bulk', 'disconnect')}*/}
+                            {/*    className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"*/}
+                            {/*>*/}
+                            {/*    <Icon iconNode={WifiOff} className="h-4 w-4 mr-1" />*/}
+                            {/*    Disconnect*/}
+                            {/*</Button>*/}
                         </div>
                     )}
                 </div>
@@ -491,22 +491,22 @@ export function PeerList({ peers = mockPeers, onPeerAction, onRefresh, isLoading
                                                     <Icon iconNode={Edit} className="h-4 w-4 mr-2" />
                                                     Edit IP Address
                                                 </DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                                {peer.status === 'online' ? (
-                                                    <DropdownMenuItem 
-                                                        onClick={() => handlePeerAction(peer.id, 'disconnect')}
-                                                        className="text-red-600 focus:text-red-600"
-                                                    >
-                                                        <Icon iconNode={WifiOff} className="h-4 w-4 mr-2" />
-                                                        Disconnect
-                                                    </DropdownMenuItem>
-                                                ) : (
-                                                    <DropdownMenuItem onClick={() => handlePeerAction(peer.id, 'connect')}>
-                                                        <Icon iconNode={Wifi} className="h-4 w-4 mr-2" />
-                                                        Connect
-                                                    </DropdownMenuItem>
-                                                )}
-                                                <DropdownMenuSeparator />
+                                                {/*<DropdownMenuSeparator />*/}
+                                                {/*{peer.status === 'online' ? (*/}
+                                                {/*    <DropdownMenuItem*/}
+                                                {/*        onClick={() => handlePeerAction(peer.id, 'disconnect')}*/}
+                                                {/*        className="text-red-600 focus:text-red-600"*/}
+                                                {/*    >*/}
+                                                {/*        <Icon iconNode={WifiOff} className="h-4 w-4 mr-2" />*/}
+                                                {/*        Disconnect*/}
+                                                {/*    </DropdownMenuItem>*/}
+                                                {/*) : (*/}
+                                                {/*    <DropdownMenuItem onClick={() => handlePeerAction(peer.id, 'connect')}>*/}
+                                                {/*        <Icon iconNode={Wifi} className="h-4 w-4 mr-2" />*/}
+                                                {/*        Connect*/}
+                                                {/*    </DropdownMenuItem>*/}
+                                                {/*)}*/}
+                                                {/*<DropdownMenuSeparator />*/}
                                                 <DropdownMenuItem 
                                                     onClick={() => handlePeerAction(peer.id, 'delete')}
                                                     className="text-red-600 focus:text-red-600"
